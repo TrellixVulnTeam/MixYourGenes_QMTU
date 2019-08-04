@@ -9,6 +9,8 @@ class trait(models.Model):
     inheritance=models.CharField(max_length=30)
     type=models.CharField(max_length=100)
     segment=models.CharField(max_length=100,default="")
+    def __str__(self):
+        return self.name
 
 class gene(models.Model):
     name = models.CharField(max_length=30, primary_key=True)
@@ -16,7 +18,7 @@ class gene(models.Model):
     img=models.ImageField(blank=True)
     description=models.TextField()
     trait_name=models.ForeignKey(trait,on_delete=models.CASCADE)
-    def __str__():
+    def __str__(self):
         return self.name
 
 class have(models.Model):
@@ -29,8 +31,8 @@ class tests(models.Model):
     date=models.DateField(auto_now=True)
     test_type=models.CharField(max_length=100)
     test_id=models.CharField(max_length=100, primary_key=True, default="")
-    def __str__():
-        return test_id
+    def __str__(self):
+        return self.test_id
 
 
 class figure(models.Model):

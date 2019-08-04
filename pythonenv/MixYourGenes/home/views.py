@@ -8,18 +8,11 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
-    print(request.user)
-    if request.user =='AnonymousUser':
-        print("hej")
-        return render(request,'home/index.html')
-    else:
+    print(request.user.is_authenticated)
+    if request.user.is_authenticated:
         return render(request,'account/index.html')
-
-@login_required
-def special(request):
-    # Remember to also set login url in settings.py!
-    # LOGIN_URL = '/home/user_login/'
-    return HttpResponse("You are logged in. Nice!")
+    else:
+        return render(request,'home/index.html')
 
 @login_required
 def user_logout(request):

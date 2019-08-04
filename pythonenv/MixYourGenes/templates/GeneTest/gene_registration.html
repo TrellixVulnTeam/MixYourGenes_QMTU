@@ -1,0 +1,25 @@
+{% extends "account/base.html" %}
+{% block body_block %}
+
+<div class="container">
+  <div class="jumbotron">
+    {% if user.is_authenticated %}
+      {% if genes %}
+      <form action="{% url 'GeneTest:gene_registration' %}" method="POST" enctype="multipart/form-data"  >
+        {% csrf_token %}
+        {% for trait in genes.items %}
+        <p>{{  trait.0.name }}</p>
+        <select>
+          {% for i in trait.1 %}
+            <option value="{{ i.name }}" name="{{ i.name }}"> {{ i.name }} </option>
+          {% endfor %}
+          </select>
+        {% endfor %}
+        <input type="submit"  value="Submit">
+      {% endif %}
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -8,4 +8,5 @@ app_name = 'GeneTest'
 urlpatterns=[
     url(r'^$',views.index,name='index'),
     url(r'^trait/$',views.TraitTest,name='trait_test'),
+    url(r'^process/$',views.gene_registration,name="gene_registration"),
 ]

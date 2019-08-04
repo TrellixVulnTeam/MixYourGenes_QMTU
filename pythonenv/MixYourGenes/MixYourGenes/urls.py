@@ -19,7 +19,6 @@ from home import views
 
 urlpatterns = [
     url(r'^$',views.index,name='index'),
-    url(r'^special/',views.special,name='special'),
     url(r'^admin/', admin.site.urls),
     url(r'^home/',include('home.urls')),
     url(r'^account/',include('account.urls')),
