@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from home.forms import UserForm,UserProfileInfoForm
+from home.models import UserProfileInfo
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -7,7 +8,12 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
-    return render(request,'home/index.html')
+    print(request.user)
+    if request.user =='AnonymousUser':
+        print("hej")
+        return render(request,'home/index.html')
+    else:
+        return render(request,'account/index.html')
 
 @login_required
 def special(request):

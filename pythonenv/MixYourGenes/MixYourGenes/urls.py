@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^home/',include('home.urls')),
     url(r'^account/',include('account.urls')),
+    url(r'^test/',include('GeneTest.urls')),
     url(r'^logout/$', views.user_logout, name='logout'),
 ]
