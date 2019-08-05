@@ -4,7 +4,7 @@ from home import models as AccountModel
 from django.db import models
 
 class trait(models.Model):
-    name = models.CharField(max_length=30,primary_key=True)
+    name = models.CharField(max_length=30, primary_key=True, default="")
     url=models.CharField(max_length=2000)
     inheritance=models.CharField(max_length=30)
     type=models.CharField(max_length=100)
@@ -13,7 +13,8 @@ class trait(models.Model):
         return self.name
 
 class gene(models.Model):
-    name = models.CharField(max_length=30, primary_key=True)
+    NCIB_ID=models.CharField(max_length=300, primary_key=True, default="")
+    name = models.CharField(max_length=30)
     genotype = models.FloatField(max_length=1)
     img=models.ImageField(blank=True)
     description=models.TextField()

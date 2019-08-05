@@ -36,8 +36,8 @@ def index(request):
         user=UserProfileInfo.objects.get(user=user)
         user_traits=have.objects.filter(user_id=user)
         if len(user_traits)>0:
-            results=tests.objects.filter(user1_id=user)
-            results=results+tests.objects.filter(user2_id=user)
+            results=tests.objects.filter(user_id1=user)
+            results=results.union(tests.objects.filter(user_id2=user))
             #here's going to be some history, previous tests
             return render(request,'GeneTest/index.html',{'results':results})
         else:
@@ -58,5 +58,7 @@ def gene_registration(request):
         user=UserProfileInfo.objects.get(user=user)
         if request.method=='POST':
             for i in request.POST:
-                print(i)
+                if i!='csrfmiddlewaretoken':
+                    h=have.objects.create(user_id=user, gene_name=gene.objects.get(NCIB_ID=request.POST.get(i)))
+                    h.save()
             return render(request,'GeneTest/index.html',{})

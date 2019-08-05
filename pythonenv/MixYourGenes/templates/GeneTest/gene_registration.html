@@ -9,9 +9,10 @@
         {% csrf_token %}
         {% for trait in genes.items %}
         <p>{{  trait.0.name }}</p>
-        <select>
+        <select name="genes{{ forloop.counter }}" id="trait{{ forloop.counter }}" >
+          <option id="blank" value="" name="blank" > Skip </option>
           {% for i in trait.1 %}
-            <option value="{{ i.name }}" name="{{ i.name }}"> {{ i.name }} </option>
+            <option value="{{ i.NCIB_ID }}" > {{ i.name }} </option>
           {% endfor %}
           </select>
         {% endfor %}
