@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
-    print(request.user.is_authenticated)
     if request.user.is_authenticated:
         return render(request,'account/index.html')
     else:
@@ -98,8 +97,8 @@ def user_login(request):
                 # Log the user in.
                 login(request,user)
                 # Send the user back to some page.
-                # In this case their homepage.
-                return render(request, 'account/index.html', {})
+                user=UserProfileInfo.objects.get(user=user)
+                return render(request,'account/index.html',{'profile':user})
             else:
                 # If home is not active:
                 return HttpResponse("Your home is not active.")

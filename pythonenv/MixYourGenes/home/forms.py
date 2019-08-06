@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from home.models import UserProfileInfo
-
+SEX=[(1,'Male'),(0,'Female')]
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
@@ -13,4 +13,5 @@ class UserForm(forms.ModelForm):
 class UserProfileInfoForm(forms.ModelForm):
     class Meta():
         model = UserProfileInfo
-        fields = ('portfolio_site','profile_pic','first_name','last_name')
+        fields = ('portfolio_site','profile_pic','first_name','last_name','sex')
+        widgets={'sex':forms.ChoiceField(widget=forms.RadioSelect, choices=SEX)}

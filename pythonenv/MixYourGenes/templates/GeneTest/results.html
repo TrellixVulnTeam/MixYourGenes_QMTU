@@ -1,0 +1,21 @@
+{% extends "account/base.html" %}
+{% block body_block %}
+{% load static %}
+
+<div class="container">
+  <div class="jumbotron">
+    {% if user.is_authenticated %}
+      {% if result %}
+      <h1>{{ user1.user.username }} & {{ user2.user.username }}</h1>
+      <p>{{ result.min_possibility }} </p>
+      <p>{{ result.max_possibility }} </p>
+      {% endif %}
+
+    {% else %}
+        <h2>Oh oh! You somehow ended up here! Please login to check the results of how your traits are passed on your children!</h2>
+    {% endif %}
+    <svg src="{% static "img/ResultFig.src" %}"></svg>
+  </div>
+</div>
+
+{% endblock %}

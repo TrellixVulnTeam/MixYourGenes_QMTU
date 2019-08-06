@@ -8,6 +8,7 @@ from django.utils.timezone import utc
 from django.views.generic.base import TemplateView
 from random import randrange
 import math
+from django.contrib.auth.models import User
 
 #---------------------------METHODS--------------------------------
 
@@ -190,9 +191,9 @@ class test():
         self.possibility={'min':1,'max':1}
         self.new_DNA={'min':[],'max':[]}
         self_figure=Figure()
-        if test=="TRAIT":
+        if test=="trait":
             return self.trait_()
-        elif test=="DESEASE":
+        elif test=="Desease":
             return self.desease()
 
     def trait_(self):
@@ -258,12 +259,9 @@ def ID_creator(test,user1,user2):
     return str(user1[:3])+test[:3]+user2[:3]+str(randrange(1000,9999))
 
 
-def run(request):
+def run(user1,user2,test_type):
     RESULT={'user1':None,'user2':None,'genes':[],'result':None,'figure':None}
-    user1_id=request.POST.get('user1_id',False)
-    user2_id=request.POST.get('user2_id',False)
-    test_name=request.POST.get('test',False)
-    id=ID_creator(test_name,user1_id,user2_id)
+    id=ID_creator(test_type,user1.user.username,user2.user.username)
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
     inherit_vector1,inherit_vector2=[],[]
     referece=[]
@@ -271,35 +269,46 @@ def run(request):
     #for i in request.keys():
     #    try:
     #        g=gene.objects.get(name=i)
-    #        referece.append(Gene(g.name,trait.objects.get(name=g.trait_name.name).inheritance,user1_id,g.genotype))
+    #        referece.append(Gene(g.name,trait.objects.get(name=g.trait_name.name).inheritance,user1.user.username,g.genotype))
     #    except:
     #        pass
-    gene_vector=have.objects.all()#(gene_name=have.objects.get(user_id=user1_id)).all()
+
+    gene_vector=have.objects.filter(user_id=user1)
     for i in gene_vector:
-        if i.user_id.ID==user1_id:
+        if i.user_id.user.username==user1.user.username:
             g=gene.objects.get(name=i.gene_name.name)
-            inherit_vector1.append(Gene(g.trait_name.name,g.name,trait.objects.get(name=g.trait_name.name).inheritance,user1_id,g.genotype))
-        elif i.user_id.ID==user2_id:
+            inherit_vector1.append(Gene(g.trait_name.name,g.name,trait.objects.get(name=g.trait_name.name).inheritance,user1.user.username,g.genotype))
+    gene_vector=have.objects.filter(user_id=user2)
+    for i in gene_vector:
+        if i.user_id.user.username==user2.user.username:
             g=gene.objects.get(name=i.gene_name.name)
-            inherit_vector2.append(Gene(g.trait_name.name,g.name,trait.objects.get(name=g.trait_name.name).inheritance,user2_id,g.genotype))
-    r=test(test_name,inherit_vector1,inherit_vector2,referece,user1_id,user2_id)
-    rc=tests.objects.create(user_id1=user.objects.get(ID=user1_id),user_id2=user.objects.get(ID=user2_id),date=now,test_type=test_name,test_id=id)
+            inherit_vector2.append(Gene(g.trait_name.name,g.name,trait.objects.get(name=g.trait_name.name).inheritance,user2.user.username,g.genotype))
+    rc=tests.objects.create(user_id1=user1,user_id2=user2,date=now,test_type=test_type,test_id=id)
+    r=test(test_type,inherit_vector1,inherit_vector2,referece,user1.user.username,user2.user.username)
     for i in ['min','max']:
         for j in r.new_chromosome[i][0]:
             if len(j.anchestor)==2:
                 for k in j.anchestor:
-                    rr=recombination.objects.create(test_id=rc,user_id=user.objects.get(ID=k),user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i,label="common")
+                    if k==user1.user.username:
+                        u=user1
+                    else:
+                        u=user2
+                    rr=recombination.objects.create(test_id=rc,user_id=u,user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i,label="common")
                     RESULT['genes'].append(rr)
             elif len(j.anchestor)==1:
-                rr=recombination.objects.create(test_id=rc,user_id=user.objects.get(ID=j.anchestor[0]),user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="")
+                if j.anchestor[0]==user1.user.username:
+                    u=user1
+                else:
+                    u=user2
+                rr=recombination.objects.create(test_id=rc,user_id=user2,user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="")
                 RESULT['genes'].append(rr)
             elif len(j.anchestor)==0:
-                rr=recombination.objects.create(test_id=rc,user_id=user.objects.get(ID=user1_id),user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="new")
-                rr=recombination.objects.create(test_id=rc,user_id=user.objects.get(ID=user2_id),user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="new")
+                rr=recombination.objects.create(test_id=rc,user_id=user1,user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="new")
+                rr=recombination.objects.create(test_id=rc,user_id=user2,user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="new")
     rres=results.objects.create(test_id=rc,min_possibility=r.possibility['min'],max_possibility=r.possibility['max'])
     fig=figure.objects.create(test_id=rc,user1_x=r.figure.user1_x,user2_x=r.figure.user2_x,new=r.figure.new,common=r.figure.common)
     RESULT['result']=rres
-    RESULT['user1']=user1_id
-    RESULT['user2']=user2_id
+    RESULT['user1']=user1
+    RESULT['user2']=user2
     RESULT['figure']=fig
-    return render(request,'tests/result.html',RESULT)
+    return RESULT

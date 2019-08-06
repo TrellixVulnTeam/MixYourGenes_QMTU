@@ -2,7 +2,6 @@ from django.db import models
 from home import models as AccountModel
 # Create your models here.
 from django.db import models
-
 class trait(models.Model):
     name = models.CharField(max_length=30, primary_key=True, default="")
     url=models.CharField(max_length=2000)

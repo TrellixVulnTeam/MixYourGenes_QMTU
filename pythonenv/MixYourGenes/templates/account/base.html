@@ -1,11 +1,23 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Base</title>
+    <title>{{ user.username }}</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    {% if user.is_authenticated %}
+      {# if profile.sex #}
+      {% if user.username == 'DAD' %}
+          <link rel="stylesheet" href="{% static "css/MaleAccount.css" %}">
+      {% elif user.username == 'MOM' %}
+          <link rel="stylesheet" href="{% static "css/FemaleAccount.css" %}">
+      {% else %}
+          <link rel="stylesheet" href="{% static "css/main.css" %}">
+      {% endif %}
+    {% else %}
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
+    {% endif %}
   </head>
   <body>
     <nav class="navbar navbar-default navbar-static-top">
@@ -15,7 +27,7 @@
           {# Django Home Link / Admin Link / Register Link#}
           <li><a class="navbar-brand" href="{% url 'account:index' %}">MixYourGenes</a></li>
           <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Test</a></li>
-          <li><a class="navbar-link" href="{% url 'GeneTest:trait_test' %}">Family</a></li>
+          <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Family</a></li>
 
           {# Some logic on what to display for last item#}
           {% if user.is_authenticated %}
