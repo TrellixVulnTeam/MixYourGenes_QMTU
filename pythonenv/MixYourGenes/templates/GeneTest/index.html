@@ -19,8 +19,7 @@
                 <h2>{{ result.user_id2.user.username }} - {{ result.date }}</h2>
                 <p>{{ result.test_type }}</p>
             {% else %}
-                <h2>{{ result.user_id1.user.username }} - {{ result.date }}</h2>
-                <p>{{ result.test_type }}</p>
+                <a href="{% url 'GeneTest:result' result.test_id %}"><h2>{{ result.user_id1.user.username }} - {{ result.date }}</h2></a>
             {% endif %}
           {% endfor %}
 
@@ -28,8 +27,5 @@
     {% else %}
         <h2>Oh oh! You somehow ended up here! Please login to assess your traits are passed on your children!</h2>
     {% endif %}
-    <img src="{% static "img/ResultFig.svg" %}"/>
-  </div>
-</div>
-
+    <!--<img src="{% static "img/ResultFig.svg" %}"/>-->
 {% endblock %}

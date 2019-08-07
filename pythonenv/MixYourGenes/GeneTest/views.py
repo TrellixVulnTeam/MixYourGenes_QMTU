@@ -51,6 +51,15 @@ def TraitDeseaseTest(request):
         return HttpResponse('???')
 
 @login_required
+def result(request,test_id):
+    if request.method=='GET':
+        TEST={}
+        TEST['test']=tests.objects.get(test_id=test_id)
+        TEST['figure']=figure.objects.get(test_id=TEST['test'])
+        TEST['result']=figure.objects.get(test_id=TEST['test'])
+        TEST['recombination']=figure.objects.filter(test_id=TEST['test'])
+        return render(request,'GeneTest/results.html',TEST)
+@login_required
 def gene_registration(request):
     if request.user.is_authenticated:
         user=User.objects.get(username=request.user.username)

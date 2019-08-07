@@ -8,5 +8,6 @@ app_name = 'GeneTest'
 urlpatterns=[
     url(r'^$',views.index,name='index'),
     url(r'^result/$',views.TraitDeseaseTest,name='trait_desease_test'),
+    url(r'^results/(?P<test_id>[\w-]+)/$',views.result,name='result'),
     url(r'^process/$',views.gene_registration,name="gene_registration"),
 ]

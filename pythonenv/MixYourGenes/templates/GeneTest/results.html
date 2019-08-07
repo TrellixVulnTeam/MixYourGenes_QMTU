@@ -6,7 +6,7 @@
   <div class="jumbotron">
     {% if user.is_authenticated %}
       {% if result %}
-      <h1>{{ user1.user.username }} & {{ user2.user.username }}</h1>
+      <h1>{{ test.user_id1.user.username }} & {{ test.user_id2.user.username }}</h1>
       <p>{{ result.min_possibility }} </p>
       <p>{{ result.max_possibility }} </p>
       {% endif %}
@@ -14,8 +14,45 @@
     {% else %}
         <h2>Oh oh! You somehow ended up here! Please login to check the results of how your traits are passed on your children!</h2>
     {% endif %}
-    <svg src="{% static "img/ResultFig.src" %}"></svg>
+
+
   </div>
 </div>
+<svg style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" viewBox="0 0 1280 720" width="500px" height="300px">
 
+<g id="chromosome" vectornator:layerName="chromosome">
+<g opacity="1">
+<path id="dad" d="" opacity="1" fill="#1693c1"/>
+<path id="common" d="" opacity="1" fill="#5a5e5e"/>
+<path id="new" d="" opacity="1" fill="#53aa64"/>
+<path id="mom" d="" opacity="1" fill="#c841d7"/>
+</g>
+</g>
+<g id="values" vectornator:layerName="values">
+<path stroke="#ffffff" stroke-width="10.1" d="M125.688+4.0625L125.688+745.348L1198.72+745.348L1198.72+4.0625L125.688+4.0625ZM1027.22+101.072C1054.24+100.895+1077.53+111.898+1099+133.965C1119.46+154.992+1115.84+180.642+1109.56+206.433C1069.78+370.006+516.211+208.407+590.688+361.519C604.232+389.364+634.272+404.831+663.281+410.794C710.125+420.425+763.299+424.575+811.344+424.575C904.605+424.575+1184.69+378.621+1108.16+575.292C1105.38+582.428+1098.95+584.767+1094.75+590.518C1082.91+606.74+1030.76+607.984+1012.97+600.669C891.947+550.909+675.65+581.195+589.281+470.221C584.697+464.33+539.735+411.533+537.812+411.533C484.783+411.533+431.877+516.605+355.219+516.605C303.764+516.605+253.989+517.357+209.281+489.783C185.266+474.972+166.815+457.71+162.031+428.205C156.406+393.511+192.006+384.074+217.031+378.929C287.624+364.417+373.734+380.375+446.875+380.375C461.584+380.375+503.586+379.734+508.188+360.812C524.804+292.49+334.813+320.948+295.281+320.948C63.2865+320.948+187.707+168.921+374.25+196.314C423.08+203.485+482.374+240.064+515+281.277L515.594+281.085C513.243+279.417+538.621+314.428+545.562+314.428C551.322+314.428+561.153+295.019+563.188+289.79C624.484+132.272+868.157+138.582+998.875+104.991C1008.79+102.443+1018.21+101.13+1027.22+101.072Z" fill="#ffffff" stroke-linecap="round" opacity="1" stroke-linejoin="round"/>
+</g>
+</svg>
+
+</div>
+</div>
+<script >
+    $(window).load(function(){
+        var scale=1153.9-151.314;
+        var dadLeftSide=151.317; //+scale*{{ figure.user1_x }};
+        var dadRightSide=300.593;//+scale*{{ figure.new }};
+        var commonLeftSide=466.94;//+scale*{{ figure.common }};
+        var momRightSide=1153.9;
+
+        var momLeftSide= 584.083;//momRightSide-scale*{{ figure.user2_x }};//584.083;
+        var commonRightSide=dadRightSide;
+        var newRightSide=commonLeftSide;
+        var newLeftSide=momLeftSide;
+            $("#dad").attr("d","M151.317+22.6187L"+dadRightSide+"+22.6187L"+dadRightSide+"+703.201L"+ dadLeftSide +"+703.201L"+dadLeftSide+"+22.6187Z");
+            $("#common").attr("d","M466.94+20L"+commonRightSide+"+20L"+commonRightSide+"+700.582L"+commonLeftSide+"+700.582L"+commonLeftSide+"+20Z");
+            $("#new").attr("d","M584.49+23.928L"+newRightSide+"+23.928L"+newRightSide+"+704.51L"+newLeftSide+"+704.51L"+newLeftSide+"+23.928Z");
+            $("#mom").attr("d","M837.083+21.3093L"+momRightSide+ "+21.3093L"+momRightSide+"+701.891L"+momLeftSide+"+701.891L"+momLeftSide+"+21.3093Z");
+
+});
+
+</script>
 {% endblock %}
