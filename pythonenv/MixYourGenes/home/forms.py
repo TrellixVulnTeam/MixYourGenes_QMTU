@@ -11,7 +11,7 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileInfoForm(forms.ModelForm):
+    sex=forms.ChoiceField(widget=forms.Select, choices=SEX)
     class Meta():
         model = UserProfileInfo
         fields = ('portfolio_site','profile_pic','first_name','last_name','sex')
-        widgets={'sex':forms.ChoiceField(widget=forms.RadioSelect, choices=SEX)}
