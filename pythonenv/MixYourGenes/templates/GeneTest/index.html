@@ -16,8 +16,7 @@
         {% if results %}
           {% for result in results %}
             {% if result.user_id1.user.username == user.username %}
-                <h2>{{ result.user_id2.user.username }} - {{ result.date }}</h2>
-                <p>{{ result.test_type }}</p>
+                <a href="{% url 'GeneTest:result' result.test_id %}"><h2>{{ result.user_id2.user.username }} - {{ result.date }}</h2></a>
             {% else %}
                 <a href="{% url 'GeneTest:result' result.test_id %}"><h2>{{ result.user_id1.user.username }} - {{ result.date }}</h2></a>
             {% endif %}

@@ -9,6 +9,10 @@
       <h1>{{ test.user_id1.user.username }} & {{ test.user_id2.user.username }}</h1>
       <p>{{ result.min_possibility }} </p>
       <p>{{ result.max_possibility }} </p>
+      <p>USER1:{{ figure.user1_x }} </p>
+      <p>USER2:{{ figure.user2_x }} </p>
+      <p>NEW:{{ figure.new }} </p>
+      <p>COMMO:{{ figure.common }} </p>
       {% endif %}
 
     {% else %}
@@ -38,15 +42,15 @@
 <script >
     $(window).load(function(){
         var scale=1153.9-151.314;
-        var dadLeftSide=151.317; //+scale*{{ figure.user1_x }};
-        var dadRightSide=300.593;//+scale*{{ figure.new }};
-        var commonLeftSide=466.94;//+scale*{{ figure.common }};
+        var dadLeftSide=151.317;
+        var dadRightSide=dadLeftSide +scale*{{ figure.user1_x }};//
+        var commonLeftSide=dadRightSide;
         var momRightSide=1153.9;
 
-        var momLeftSide= 584.083;//momRightSide-scale*{{ figure.user2_x }};//584.083;
-        var commonRightSide=dadRightSide;
-        var newRightSide=commonLeftSide;
-        var newLeftSide=momLeftSide;
+        var momLeftSide= momRightSide-scale*{{ figure.user2_x }};//584.083;
+        var commonRightSide=commonLeftSide + scale*{{ figure.common }};
+        var newRightSide=momLeftSide;
+        var newLeftSide=newRightSide - scale*{{ figure.new }};
             $("#dad").attr("d","M151.317+22.6187L"+dadRightSide+"+22.6187L"+dadRightSide+"+703.201L"+ dadLeftSide +"+703.201L"+dadLeftSide+"+22.6187Z");
             $("#common").attr("d","M466.94+20L"+commonRightSide+"+20L"+commonRightSide+"+700.582L"+commonLeftSide+"+700.582L"+commonLeftSide+"+20Z");
             $("#new").attr("d","M584.49+23.928L"+newRightSide+"+23.928L"+newRightSide+"+704.51L"+newLeftSide+"+704.51L"+newLeftSide+"+23.928Z");

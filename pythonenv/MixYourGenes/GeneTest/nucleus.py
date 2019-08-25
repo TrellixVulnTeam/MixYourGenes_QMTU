@@ -161,15 +161,9 @@ class Figure():
     def __init__(self,user1=0,user2=0,common=0,new=0):
 
         self.user1_x=user1
-        self.user2_x=1-user2
-        if common==0:
-            self.common=self.user1_x
-        else:
-            self.common=self.user1_x+common
-        if new==0:
-            self.new=self.user2_x
-        else:
-            self.new=1-(self.user2_x+new)
+        self.user2_x=user2
+        self.common=+common
+        self.new=new
 
 
 class Recombination_result(Gene):
