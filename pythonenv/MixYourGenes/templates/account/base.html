@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.username }}</title>
     <script>window.jQuery || document.write('<script src="{% static "js/jquery-1.9.1.min.js" %}"><\/script>')</script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -26,7 +27,7 @@
         <ul class="nav navbar-nav">
 
           {# Django Home Link / Admin Link / Register Link#}
-          <li><a class="navbar-brand" href="{% url 'account:index' %}">MixYourGenes</a></li>
+          <li><a class="navbar-brand" href="{% url 'account:index' %}"><img src="{% static 'img/MainLogo.png' %}" width="50px" height="50px"> </a></li>
           <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Test</a></li>
           <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Family</a></li>
 

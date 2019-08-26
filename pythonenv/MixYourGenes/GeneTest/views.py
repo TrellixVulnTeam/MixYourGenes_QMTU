@@ -44,7 +44,12 @@ def TraitDeseaseTest(request):
             return HttpResponse('Gays can\'t have children, sorry!')
         else:
             print(context)
-            return render(request,'GeneTest/results.html',context)
+            TEST={}
+            TEST['test']=context['test']
+            TEST['figure']=context['figure']
+            TEST['result']=context['result']
+            TEST['recombination']=recombination.objects.filter(test_id=context['test'])
+            return render(request,'GeneTest/results.html',TEST)
         #except:
         #    return HttpResponse('Please invite your partner for MixYourGenes.com!')
     else:
@@ -57,8 +62,15 @@ def result(request,test_id):
         TEST['test']=tests.objects.get(test_id=test_id)
         TEST['figure']=figure.objects.get(test_id=TEST['test'])
         TEST['result']=figure.objects.get(test_id=TEST['test'])
-        TEST['recombination']=figure.objects.filter(test_id=TEST['test'])
+        TEST['recombination']=recombination.objects.filter(test_id=TEST['test'])
+        print(TEST)
         return render(request,'GeneTest/results.html',TEST)
+
+def delete(request,test_id):
+    if request.method=='GET':
+        t=tests.objects.get(test_id=test_id)
+        t.delete()
+        return render(request,'account/index.html',{})
 @login_required
 def gene_registration(request):
     if request.user.is_authenticated:
