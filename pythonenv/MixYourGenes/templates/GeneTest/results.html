@@ -1,7 +1,6 @@
 {% extends "account/base.html" %}
 {% block body_block %}
 {% load static %}
-
 <div class="container">
   <div class="jumbotron">
     {% if user.is_authenticated %}
@@ -22,51 +21,53 @@
 
   </div>
 </div>
-<div>
+<div class="container">
 <svg style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" viewBox="0 0 1280 720" width="500px" height="300px">
 
 <g id="chromosome" vectornator:layerName="chromosome">
 <g opacity="1">
-<path id="dad" d="" opacity="1" fill="#1693c1"/>
-<path id="common" d="" opacity="1" fill="#5a5e5e"/>
-<path id="new" d="" opacity="1" fill="#53aa64"/>
-<path id="mom" d="" opacity="1" fill="#c841d7"/>
+<path id="dad" class="figure" d="" opacity="1" fill="#1693c1"/>
+<path id="common" class="figure" d="" opacity="1" fill="#5a5e5e"/>
+<path id="new" class="figure" d="" opacity="1" fill="#53aa64"/>
+<path id="mom" class="figure" d="" opacity="1" fill="#c841d7"/>
 </g>
 </g>
 <g id="values" vectornator:layerName="values">
 <path stroke="#ffffff" stroke-width="10.1" d="M125.688+4.0625L125.688+745.348L1198.72+745.348L1198.72+4.0625L125.688+4.0625ZM1027.22+101.072C1054.24+100.895+1077.53+111.898+1099+133.965C1119.46+154.992+1115.84+180.642+1109.56+206.433C1069.78+370.006+516.211+208.407+590.688+361.519C604.232+389.364+634.272+404.831+663.281+410.794C710.125+420.425+763.299+424.575+811.344+424.575C904.605+424.575+1184.69+378.621+1108.16+575.292C1105.38+582.428+1098.95+584.767+1094.75+590.518C1082.91+606.74+1030.76+607.984+1012.97+600.669C891.947+550.909+675.65+581.195+589.281+470.221C584.697+464.33+539.735+411.533+537.812+411.533C484.783+411.533+431.877+516.605+355.219+516.605C303.764+516.605+253.989+517.357+209.281+489.783C185.266+474.972+166.815+457.71+162.031+428.205C156.406+393.511+192.006+384.074+217.031+378.929C287.624+364.417+373.734+380.375+446.875+380.375C461.584+380.375+503.586+379.734+508.188+360.812C524.804+292.49+334.813+320.948+295.281+320.948C63.2865+320.948+187.707+168.921+374.25+196.314C423.08+203.485+482.374+240.064+515+281.277L515.594+281.085C513.243+279.417+538.621+314.428+545.562+314.428C551.322+314.428+561.153+295.019+563.188+289.79C624.484+132.272+868.157+138.582+998.875+104.991C1008.79+102.443+1018.21+101.13+1027.22+101.072Z" fill="#ffffff" stroke-linecap="round" opacity="1" stroke-linejoin="round"/>
 </g>
 </svg>
-    <div id="details">
+    <div id="details" height="100px">
         {% for gene in recombination %}
         {% if gene.type == "max" %}
-        <p>{{ gene.type }}, {{ gene.label }},{{ gene.user_gene}}</p>
           {% if gene.label == "parent" %}
-          {{ gene.user_id }}
               {% if gene.user_id.sex %}
-                  <div class="mom">
-                      <img src="{% static 'img/dadgene.png' %}">
-                      <p>{{ gene.user_gene }}</p>
-                        <p>{{ gene.possibility }}</p>
+                  <div class="dad">
+                    <tr>
+                      <td><img src="{% static 'img/dadgene.png' %}" height="120px" ></td>
+                      <td><img src="/media/{{ gene.user_gene.img }}" height="120px"></td>
+                    </tr>
                   </div>
               {% else %}
-                  <div class="dad">
-                      <img src="{% static 'img/momgene.png' %}">
-                      <p>{{ gene.user_gene }}</p>
-                        <p>{{ gene.possibility }}</p>
+                  <div class="mom">
+                    <tr>
+                      <td><img src="{% static 'img/momgene.png' %}" height="120px" ></td>
+                      <td><img src="/media/{{ gene.user_gene.img }}" height="120px"></td>
+                    </tr>
                   </div>
               {% endif %}
           {% elif gene.label == "new" %}
               <div class="new">
-                <img src="{% static 'img/newgene.png' %}">
-                <p>{{ gene.user_gene }}</p>
-                  <p>{{ gene.possibility }}</p>
+                <tr>
+                  <td><img src="{% static 'img/newgene.png' %}" height="120px" ></td>
+                  <td><img src="/media/{{ gene.user_gene.img }}" height="120px"></td>
+                </tr>
               </div>
           {% else %}
           <div class="common">
-            <img src="{% static 'img/commongene.png' %}">
-            <p>{{ gene.user_gene }}</p>
-              <p>{{ gene.possibility }}</p>
+            <tr>
+              <td><img src="{% static 'img/commongene.png' %}" height="120px" ></td>
+              <td><img src="/media/{{ gene.user_gene.img }}" height="120px"></td>
+            </tr>
           </div>
           {% endif %}
           {% endif %}
@@ -91,8 +92,18 @@
             $("#common").attr("d","M466.94+20L"+commonRightSide+"+20L"+commonRightSide+"+700.582L"+commonLeftSide+"+700.582L"+commonLeftSide+"+20Z");
             $("#new").attr("d","M584.49+23.928L"+newRightSide+"+23.928L"+newRightSide+"+704.51L"+newLeftSide+"+704.51L"+newLeftSide+"+23.928Z");
             $("#mom").attr("d","M837.083+21.3093L"+momRightSide+ "+21.3093L"+momRightSide+"+701.891L"+momLeftSide+"+701.891L"+momLeftSide+"+21.3093Z");
-
-});
-
+          });
+      $('#dad').click(function(){
+        $('.dad').attr('display','block');
+      });
+      $('#mom').click(function(){
+        $('.mom').attr('display','block');
+      });
+      $('#new').click(function(){
+        $('.new').attr('display','block');
+      });
+      $('#common').click(function(){
+        $('.common').attr('display','block');
+      });
 </script>
 {% endblock %}

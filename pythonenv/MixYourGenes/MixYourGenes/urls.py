@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 from home import views
+from . import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^$',views.index,name='index'),
@@ -25,3 +27,5 @@ urlpatterns = [
     url(r'^test/',include('GeneTest.urls')),
     url(r'^logout/$', views.user_logout, name='logout'),
 ]
+if settings.DEBUG: # new
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

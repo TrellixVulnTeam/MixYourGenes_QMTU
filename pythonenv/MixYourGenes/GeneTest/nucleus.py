@@ -294,7 +294,7 @@ def run(user1,user2,test_type):
                     u=user1
                 else:
                     u=user2
-                rr=recombination.objects.create(test_id=rc,user_id=user2,user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="parent")
+                rr=recombination.objects.create(test_id=rc,user_id=u,user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="parent")
                 RESULT['genes'].append(rr)
             elif len(j.anchestor)==0:
                 rr=recombination.objects.create(test_id=rc,user_id=user1,user_gene=gene.objects.get(name=j.name),possibility=j.possibility,type=i, label="new")

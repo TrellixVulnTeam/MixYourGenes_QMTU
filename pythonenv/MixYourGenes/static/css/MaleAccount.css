@@ -67,3 +67,11 @@
           color: #333;
     }
 }
+
+.figure:hover {
+  opacity:0.8;
+}
+
+#details{
+  overflow: scroll;
+}
