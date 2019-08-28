@@ -31,6 +31,7 @@
           <li><a class="navbar-brand" href="{% url 'account:index' %}"><img src="{% static 'img/MainLogo.png' %}" width="50px" height="50px"> </a></li>
           <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Test</a></li>
           <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Family</a></li>
+          <li><a class="navbar-link" href="{% url 'account:profile' %}"><img src="/media/profile_pictures/th.jpeg" width="50px" height="50px"></a></li>
 
           {# Some logic on what to display for last item#}
           {% if user.is_authenticated %}

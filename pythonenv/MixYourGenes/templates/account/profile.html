@@ -1,0 +1,52 @@
+{% extends "account/base.html" %}
+{% block body_block %}
+
+<div class="container">
+  <div class="jumbotron">
+
+    <h1>{{ user.username }}</h1>
+    <img src="/media/profile_pictures/th.jpeg" width="200px" height="200px">
+    {% for gene in genes %}
+      <img src="/media/{{ gene.gene_name.img }}" height="120px">
+    {% endfor %}
+    {% if parents %}
+        {% if parents.mom %}
+              <p>Mother:parents.mom.username</p>
+              <img src="/media/{{ gene.gene_name.img }}" height="120px">
+        {% else %}
+              <form action="{% url 'account:AddFamilyMember' 'mom' %}" method="POST" enctype="multipart/form-data"  >
+                {% csrf_token %}
+                <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
+                <input type="text" name="mom" replacer="pleasre write in your partner's account">
+                <input type="submit" name="family" value="Add mother">
+              </form>
+        {% endif %}
+        {% if parents.dad %}
+              <p>Father: parents.dad.username</p>
+              <img src="/media/{{ gene.gene_name.img }}" height="120px">
+        {% else %}
+              <form action="{% url 'account:AddFamilyMember' 'dad' %}" method="POST" enctype="multipart/form-data"  >
+                {% csrf_token %}
+                <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
+                <input type="text" name="dad" replacer="pleasre write in your partner's account">
+                <input type="submit" name="family" value="Add father">
+              </form>
+        {% endif %}
+    {% endif %}
+    {% if siblings %}
+        {% for sibling in siblings %}
+              <p>sibling.sibling.username</p>
+              <img src="/media/{{ gene.gene_name.img }}" height="120px">
+        {% endfor %}
+    {% else %}
+          <form action="{% url 'account:AddFamilyMember' 'sibling' %}" method="POST" enctype="multipart/form-data"  >
+            {% csrf_token %}
+            <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
+            <input type="text" name="sibling" replacer="pleasre write in your partner's account">
+            <input type="submit" name="family" value="Add father">
+          </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -7,11 +7,11 @@ class UserForm(forms.ModelForm):
 
     class Meta():
         model = User
-        fields = ('username','email','password')
+        fields = ('username','email','password','first_name','last_name')
 
 
 class UserProfileInfoForm(forms.ModelForm):
     sex=forms.ChoiceField(widget=forms.Select, choices=SEX)
     class Meta():
         model = UserProfileInfo
-        fields = ('portfolio_site','profile_pic','first_name','last_name','sex')
+        fields = ('profile_pic','sex')

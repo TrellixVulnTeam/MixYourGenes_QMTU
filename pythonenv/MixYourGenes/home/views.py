@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from home.forms import UserForm,UserProfileInfoForm
-from home.models import UserProfileInfo
+from home.models import UserProfileInfo,Parent,Sibling
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -63,7 +63,6 @@ def register(request):
 
             # Registration Successful!
             registered = True
-
         else:
             # One of the forms was invalid if this else gets called.
             print(user_form.errors,profile_form.errors)
