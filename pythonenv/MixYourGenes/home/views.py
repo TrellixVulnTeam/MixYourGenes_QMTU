@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from home.forms import UserForm,UserProfileInfoForm
-from home.models import UserProfileInfo,Parent,Sibling
+from home.models import UserProfileInfo,Sibling #,Parent
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse

@@ -18,21 +18,33 @@ def index(request):
         return render(request,'account/index.html')
 @login_required
 def profile(request):
-    print(request.user.is_authenticated)
     if request.user.is_authenticated:
         user=User.objects.get(username=request.user.username)
         user=UserProfileInfo.objects.get(user=user)
         genes=have.objects.filter(user_id=user)
-        parents=Parent.objects.filter(user=user)
-        siblings=Sibling.objects.filter(user=user)
-        if len(parents)==0 and len(siblings)==0:
-            return render(request,'account/profile.html',{'profile':user,'genes':genes})
-        elif len(parents)>0:
-            return render(request,'account/profile.html',{'profile':user,'genes':genes,'parents':parents[0]})
+        sibling1=Sibling.objects.filter(sibling1=user)
+        sibling2=Sibling.objects.filter(sibling2=user)
+        siblings=sibling1.union(sibling2)
+        SelfTest=tests.objects.filter(accessor=user)
+        if len(SelfTest)==0:
+            SelfTest=False
+        else:
+            SelfTest=SelfTest[0]
+        if user.sex:
+            children=UserProfileInfo.objects.filter(dad=user)
+        else:
+            children=UserProfileInfo.objects.filter(mom=user)
+
+        if len(siblings)==0 and len(children)==0:
+            return render(request,'account/profile.html',{'profile':user,'genes':genes,'test':SelfTest})
         elif len(siblings)>0:
-            return render(request,'account/profile.html',{'profile':user,'genes':genes,'siblings':siblings})
-        elif len(siblings)>0 and len(parents)>0:
-            return render(request,'account/profile.html',{'profile':user,'genes':genes,'siblings':siblings, 'parents':parents[0]})
+            return render(request,'account/profile.html',{'profile':user,'genes':genes,'siblings':siblings,'test':SelfTest})
+        elif len(children)>0:
+            return render(request,'account/profile.html',{'profile':user,'genes':genes,'children':children,'test':SelfTest})
+        elif len(children)>0 and len(siblings)>0:
+            return render(request,'account/profile.html',{'profile':user,'genes':genes,'children':children, 'siblings':siblings,'test':SelfTest})
+
+
     else:
         return HttpResponseRedirect('/account/')
 
@@ -40,28 +52,32 @@ def profile(request):
 def AddFamilyMember(request,member):
     user=User.objects.get(username=request.user.username)
     user=UserProfileInfo.objects.get(user=user)
+
     if member=='dad':
         dad=User.objects.get(username=request.POST.get('dad'))
         dad=UserProfileInfo.objects.get(user=dad)
-        parents=Parent.objects.filter(user=user)
-        if len(parents)>0:
-            parents[0].dad=dad
-            parents[0].save()
-        else:
-            parents=Parent.create(user=user,dad=dad)
+        user.dad=dad
+        user.save()
+        return HttpResponseRedirect('/account/profile/')
     elif member=='mom':
-        mom=User.objects.get(username=request.POST.get('dad'))
+        mom=User.objects.get(username=request.POST.get('mom'))
         mom=UserProfileInfo.objects.get(user=mom)
-        parents=Parent.objects.filter(user=user)
-        if len(parents)>0:
-            parents[0].mom=mom
-            parents[0].save()
-        else:
-            parents=Parent.create(user=user,mom=mom)
+        user.mom=mom
+        user.save()
+        return HttpResponseRedirect('/account/profile/')
     elif member=='sibling':
         sibling=User.objects.get(username=request.POST.get('sibling'))
-        sibling=UserProfileInfo.objects.get(user=user)
-        s=Sibling.create(user=user,sibling=sibling)
+        sibling=UserProfileInfo.objects.get(user=sibling)
+        s=Sibling.objects.create(sibling1=user,sibling2=sibling)
         s.save()
-
+        return HttpResponseRedirect('/account/profile/')
+    elif member=='child':
+        child=User.objects.get(username=request.POST.get('child'))
+        child=UserProfileInfo.objects.get(user=child)
+        if user.sex:
+            child.dad=user
+            child.save()
+        else:
+            child.mom=user
+            child.save()
         return HttpResponseRedirect('/account/profile/')

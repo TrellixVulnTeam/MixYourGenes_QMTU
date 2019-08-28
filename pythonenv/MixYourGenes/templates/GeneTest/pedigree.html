@@ -1,0 +1,30 @@
+{% extends "account/base.html" %}
+{% block body_block %}
+{% load static %}
+<div class="container">
+  <div class="jumbotron">
+    {% if user.is_authenticated %}
+
+        <form action="{% url 'GeneTest:trait_desease_test' %}" method="POST" enctype="multipart/form-data"  >
+          {% csrf_token %}
+          <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
+          <input type="text" name="User2" replacer="pleasre write in your partner's account">
+          <input type="submit" name="test_type" value="Trait test">
+          <input type="submit" name="test_type" value="Desease test">
+          <input type="submit" name="test_both" value="Alltogether">
+        </form>
+        {% if results %}
+          {% for result in results %}
+            {% if result.user_id1.user.username == user.username %}
+                <a href="{% url 'GeneTest:result' result.test_id %}"><h2>{{ result.user_id2.user.username }} - {{ result.date }}</h2></a>
+            {% else %}
+                <a href="{% url 'GeneTest:result' result.test_id %}"><h2>{{ result.user_id1.user.username }} - {{ result.date }}</h2></a>
+            {% endif %}
+          {% endfor %}
+
+        {% endif %}
+    {% else %}
+        <h2>Oh oh! You somehow ended up here! Please login to assess your traits are passed on your children!</h2>
+    {% endif %}
+    <!--<img src="{% static "img/ResultFig.svg" %}"/>-->
+{% endblock %}

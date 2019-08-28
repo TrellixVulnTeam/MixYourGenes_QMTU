@@ -28,6 +28,7 @@ class have(models.Model):
 class tests(models.Model):
     user_id1=models.ForeignKey(AccountModel.UserProfileInfo,on_delete=models.CASCADE,related_name="User1")
     user_id2=models.ForeignKey(AccountModel.UserProfileInfo,on_delete=models.CASCADE,related_name="User2")
+    accessor=models.ForeignKey(AccountModel.UserProfileInfo,on_delete=models.CASCADE,related_name="Child", blank=True, null=True)
     date=models.DateField(auto_now=True)
     test_type=models.CharField(max_length=100)
     test_id=models.CharField(max_length=100, primary_key=True, default="")

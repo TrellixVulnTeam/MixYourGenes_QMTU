@@ -9,43 +9,74 @@
     {% for gene in genes %}
       <img src="/media/{{ gene.gene_name.img }}" height="120px">
     {% endfor %}
-    {% if parents %}
-        {% if parents.mom %}
-              <p>Mother:parents.mom.username</p>
-              <img src="/media/{{ gene.gene_name.img }}" height="120px">
-        {% else %}
+    <h2>Parents</h2>
+    {% if profile.mom %}
+
+              <p>Mother:{{ profile.mom.user.username }}</p>
+              <img src="/media/profile_pictures/th.jpeg" height="120px">
+    {% else %}
               <form action="{% url 'account:AddFamilyMember' 'mom' %}" method="POST" enctype="multipart/form-data"  >
                 {% csrf_token %}
                 <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
                 <input type="text" name="mom" replacer="pleasre write in your partner's account">
                 <input type="submit" name="family" value="Add mother">
               </form>
-        {% endif %}
-        {% if parents.dad %}
-              <p>Father: parents.dad.username</p>
-              <img src="/media/{{ gene.gene_name.img }}" height="120px">
-        {% else %}
+    {% endif %}
+    {% if profile.dad %}
+              <p>Father: {{ profile.dad.user.username }}</p>
+              <img src="/media/profile_pictures/th.jpeg" height="120px">
+    {% else %}
               <form action="{% url 'account:AddFamilyMember' 'dad' %}" method="POST" enctype="multipart/form-data"  >
                 {% csrf_token %}
                 <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
                 <input type="text" name="dad" replacer="pleasre write in your partner's account">
                 <input type="submit" name="family" value="Add father">
               </form>
-        {% endif %}
     {% endif %}
+    <h2>Siblings</h2>
     {% if siblings %}
         {% for sibling in siblings %}
-              <p>sibling.sibling.username</p>
-              <img src="/media/{{ gene.gene_name.img }}" height="120px">
+          {% if sibling.sibling1.user.username == user.username %}
+              <p>{{ sibling.sibling2.user.username }}</p>
+              <img src="/media/profile_pictures/th.jpeg" height="120px">
+          {% else %}
+              <p>{{ sibling.sibling1.user.username }}</p>
+              <img src="/media/profile_pictures/th.jpeg" height="120px">
+          {% endif %}
         {% endfor %}
-    {% else %}
-          <form action="{% url 'account:AddFamilyMember' 'sibling' %}" method="POST" enctype="multipart/form-data"  >
-            {% csrf_token %}
-            <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
-            <input type="text" name="sibling" replacer="pleasre write in your partner's account">
-            <input type="submit" name="family" value="Add father">
-          </form>
+
     {% endif %}
+    <form action="{% url 'account:AddFamilyMember' 'sibling' %}" method="POST" enctype="multipart/form-data"  >
+      {% csrf_token %}
+      <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
+      <input type="text" name="sibling" replacer="please write in your partner's account">
+      <input type="submit" name="family" value="Add sibling">
+    </form>
+    <h2>Children</h2>
+    {% if children %}
+          {% for child in children %}
+            <p>{{ child.user.username }}</p>
+            <img src="/media/profile_pictures/th.jpeg" height="120px">
+            <p>{{ sibling.sibling1.user.username }}</p>
+          {% endfor %}
+    {% endif %}
+      <form action="{% url 'account:AddFamilyMember' 'child' %}" method="POST" enctype="multipart/form-data"  >
+        {% csrf_token %}
+        <input type="hidden" name="{{ user.username }}" value="{{ user.username }}">
+        <input type="text" name="child" replacer="please write in your partner's account">
+        <input type="submit" name="family" value="Add child">
+      </form>
+
+      {% if test %}
+          <iframe src="{% url 'GeneTest:result' test.test_id %}" height="400px" width="800px"/>
+      {% else %}
+      <form action="{% url 'GeneTest:selftest' %}" method="POST" enctype="multipart/form-data"  >
+            {% csrf_token %}
+            <input type="hidden" name="mom" value="{{ profile.mom.user.username }}">
+            <input type="hidden" name="dad" value="{{ profile.dad.user.username }}">
+            <input type="submit" name="selftest" value="CalculateMyTraits">
+        </form>
+      {% endif %}
   </div>
 </div>
 
