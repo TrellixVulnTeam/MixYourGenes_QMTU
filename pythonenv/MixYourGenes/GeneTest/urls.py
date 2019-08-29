@@ -12,5 +12,5 @@ urlpatterns=[
     url(r'^results/(?P<test_id>[\w-]+)/$',views.result,name='result'),
     url(r'^delete/(?P<test_id>[\w-]+)/$',views.delete,name='delete'),
     url(r'^process/$',views.gene_registration,name="gene_registration"),
-    url(r'^family/$',views.DrawPedigree,name="pedigree"),
+    #url(r'^family/$',views.DrawPedigree,name="pedigree"),
 ]

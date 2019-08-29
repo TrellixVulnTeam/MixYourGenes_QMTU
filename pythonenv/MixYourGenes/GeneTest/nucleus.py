@@ -9,6 +9,9 @@ from django.views.generic.base import TemplateView
 from random import randrange
 import math
 from django.contrib.auth.models import User
+from scipy.special import comb
+from matplotlib import pyplot as plt
+from MixYourGenes.settings import MEDIA_DIR
 
 #---------------------------METHODS--------------------------------
 
@@ -174,7 +177,8 @@ class Recombination_result(Gene):
         self.anchestor=anchestor
 
 class test():
-    def __init__(self,test,iv1,iv2,ivr,parent1,parent2):#DON'T FORGET TO DECLARE ivr
+    def __init__(self,test,iv1,iv2,ivr,parent1,parent2,id):#DON'T FORGET TO DECLARE ivr
+        self.id=id
         self.inherit_vector1=iv1
         self.inherit_vector2=iv2
         self.reference_vector=ivr
@@ -224,6 +228,7 @@ class test():
         self.new_chromosome['min']=[i for i in self.new_DNA['min']],self.possibility['min']
         self.new_chromosome['max']=[i for i in self.new_DNA['max']],self.possibility['max']
         self.which_user()
+        self.BinomialDistribution(genes)
 
     def which_user(self):#according to the genotypes, it results the likelihood of which of the parents' trait is going to be passed to the successor
         new_chromosome=list(self.new_chromosome['max'][0])
@@ -247,6 +252,44 @@ class test():
 
     def desease(self):
         pass
+
+    def binomial(self,NumberOfGenes,AllGene,possibility):
+        return comb(AllGene,NumberOfGenes)*(possibility**NumberOfGenes)*((1-possibility)**(AllGene-NumberOfGenes)),comb(AllGene,NumberOfGenes)
+    def BinomialDistribution(self,gene_vector):
+        PossibilityTrendLine=[]
+        HistogramArray=[]
+        DistributionDict={}
+        carrier=0
+        for i in gene_vector:
+            if (self.get_gene(i,self.inherit_vector2).dominancy==0 and self.get_gene(i,self.inherit_vector1).dominancy==1) or (self.get_gene(i,self.inherit_vector2).dominancy==1 and self.get_gene(i,self.inherit_vector1).dominancy==0):
+                carrier=carrier+1
+        for j in range(0,carrier+1):
+            PTL,HA=self.binomial(AllGene=carrier,NumberOfGenes=j,possibility=0.75)
+            PossibilityTrendLine.append(PTL)
+            for i in range(0,int(HA)):
+                HistogramArray.append(j)
+
+
+        #creating figure
+        plt.figure(figsize=[10, 10])
+
+        fig=plt.figure(figsize=[10,10])
+
+        ax1 = fig.add_subplot(1,1,1)
+        ax1.set_xlabel('Number of dominant genes')
+        ax1.set_ylabel('Number of cases',)
+        ax1.hist(HistogramArray, bins=7, color='blue')
+        ax1.tick_params(axis='y')
+
+        ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+        ax2.set_ylabel('Possibility')  # we already handled the x-label with ax1
+        ax2.plot([i for i in range(carrier+1)], PossibilityTrendLine, color="black")
+        ax2.tick_params(axis='y')
+        fig.tight_layout()
+        fig.gca().set_position([0, 0, 1, 1])
+        fig.savefig(str(MEDIA_DIR)+"/plots/"+str(self.id)+".svg")
+
 
 
 def ID_creator(test,user1,user2):
@@ -278,7 +321,7 @@ def run(user1,user2,test_type):
             g=gene.objects.get(name=i.gene_name.name)
             inherit_vector2.append(Gene(g.trait_name.name,g.name,trait.objects.get(name=g.trait_name.name).inheritance,user2.user.username,g.genotype))
     rc=tests.objects.create(user_id1=user1,user_id2=user2,date=now,test_type=test_type,test_id=id)
-    r=test(test_type,inherit_vector1,inherit_vector2,referece,user1.user.username,user2.user.username)
+    r=test(test_type,inherit_vector1,inherit_vector2,referece,user1.user.username,user2.user.username,id)
     for i in ['min','max']:
         for j in r.new_chromosome[i][0]:
             if len(j.anchestor)==2:
