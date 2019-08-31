@@ -112,4 +112,4 @@ def gene_registration(request):
 def DrawPedigree(request):
     user=User.objects.get(username=request.user.username)
     user=UserProfileInfo.objects.get(user=user)
-    return render(request,'account/pedigree.html',{})
+    return render(request,'GeneTest/pedigree.html',{})

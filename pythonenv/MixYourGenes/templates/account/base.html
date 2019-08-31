@@ -8,6 +8,8 @@
     <title>{{ user.username }}</title>
     <script>window.jQuery || document.write('<script src="{% static "js/jquery-1.9.1.min.js" %}"><\/script>')</script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    {% block styleblock %}
+    {% endblock %}
     <script type="text/javascript" src="{% static "js/jquery.svg.js" %}"></script>
     {% if user.is_authenticated %}
       {# if profile.sex #}
@@ -30,7 +32,7 @@
           {# Django Home Link / Admin Link / Register Link#}
           <li><a class="navbar-brand" href="{% url 'account:index' %}"><img src="{% static 'img/MainLogo.png' %}" width="50px" height="50px"> </a></li>
           <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Test</a></li>
-          <li><a class="navbar-link" href="{% url 'GeneTest:index' %}">Family</a></li>
+          <li><a class="navbar-link" href="{% url 'GeneTest:pedigree' %}">Family</a></li>
           <li><a class="navbar-link" href="{% url 'account:profile' %}"><img src="/media/profile_pictures/th.jpeg" width="50px" height="50px"></a></li>
 
           {# Some logic on what to display for last item#}
