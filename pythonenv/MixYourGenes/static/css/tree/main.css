@@ -29,19 +29,49 @@ section {
   .basic-style > h1 {
     color: #ac2222; }
 
-p.simple-card {
+p.simple-card-male {
   margin: 0;
   background-color: #fff;
-  color: #DE5454;
+  color: #007fff;
   padding: 30px;
-  border-radius: 7px;
+  border-radius: 4px;
   min-width: 100px;
   text-align: center;
-  box-shadow: 0 3px 6px rgba(204, 131, 103, 0.22); }
+  box-shadow: 0 3px 6px rgba(30,144,255,0.2); }
+
+  p.simple-card-female {
+    margin: 0;
+    background-color: #fff;
+    color: #9f2b68;
+    padding: 30px;
+    border-radius: 80px;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(219,112,147,0.2); }
+
+  p.simple-card-male-desease {
+    margin: 0;
+    color: #fff;
+    background-color: #007fff;
+    padding: 30px;
+    border-radius: 4px;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(30,144,255,0.2); }
+
+  p.simple-card-female-desease {
+    margin: 0;
+    color: #fff;
+    background-color: #9f2b68;
+    padding: 30px;
+    border-radius: 80px;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(219,112,147,0.2); }
+
 
 .hv-item-parent p {
-  font-weight: bold;
-  color: #DE5454; }
+  font-weight: bold; }
 
 .management-hierarchy {
   background-color: #303840; }

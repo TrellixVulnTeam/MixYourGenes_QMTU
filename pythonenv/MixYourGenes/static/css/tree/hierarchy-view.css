@@ -1,5 +1,6 @@
 .hv-wrapper {
-  display: flex; }
+  display: flex;
+  overflow:scroll; }
   .hv-wrapper .hv-item {
     display: flex;
     flex-direction: column;
@@ -11,7 +12,7 @@
       display: flex;
       justify-content: center; }
 
-    .hv-wrapper .hv-item  .hv-item-parents .hv-item-parent  {
+    .hv-wrapper .hv-item  .hv-item-parent  {
       margin-bottom: 10px;
       margin-left: 25px;
       margin-right: 25px;
@@ -19,7 +20,7 @@
       display: flex;
       justify-content: center;; }
 
-      .hv-wrapper .hv-item .hv-item-parents:before {
+       .hv-item-parents:before {
         position: absolute;
         content: '';
         width: 2px;
@@ -29,13 +30,13 @@
         background-color: rgba(255, 255, 255, 0.7);
         transform: translateY(37%); }
 
-      .hv-wrapper .hv-item .hv-item-parents:after  {
+      .hv-item-parents:after  {
           top: 50px;
           transform: translateY(-100%);
           height: 2px;
           width: 50%; }
 
-          .hv-wrapper .hv-item .hv-item-parent-left:before {
+           .hv-item-parent-left:before {
             position: absolute;
             content: '';
             width: 2px;
@@ -44,11 +45,26 @@
             left: 50%;
             background-color: rgba(255, 255, 255, 0.7);
             transform: translateX(50%); }
-          .hv-wrapper .hv-item .hv-item-parent-left:before  {
+          .hv-item-parent-left:before  {
               top: 50px;
               transform: translateX(10%);
               height: 2px;
               width: 100%; }
+
+              .hv-item-parent-right:before {
+               position: absolute;
+               content: '';
+               width: 2px;
+               height: 50px;
+               bottom: 0;
+               left: 50%;
+               background-color: rgba(255, 255, 255, 0.7);
+               transform: translateX(-50%); }
+             .hv-item-parent-right:before  {
+                 top: 50px;
+                 transform: translateX(-120%);
+                 height: 2px;
+                 width: 100%; }
 
 
     .hv-wrapper .hv-item .hv-item-children {

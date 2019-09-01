@@ -10,6 +10,29 @@ class UserProfileInfo(models.Model):
     def __str__(self):
         return self.user.username
 
+#    @staticmethod
+#    def get_child(self):
+#        if self.sex:
+#            ch=type(self).objects.filter(dad=type(self))
+#        else:
+#            ch=type(self).objects.filter(mom=type(self))
+#
+#        if len(ch)>0:
+#            return ch
+#        else:
+#            return None
+#
+#    @staticmethod
+#    def get_other_parent():
+#        if self.get_child() is not None:
+#            if self.sex:
+#                return self.get_child().mom
+#            else:
+#                return self.get_child().dad
+#        else:
+#            return None
+
+
 class Sibling(models.Model):
     sibling1=models.ForeignKey(UserProfileInfo,on_delete=False,related_name="User")
     sibling2=models.ForeignKey(UserProfileInfo,on_delete=False,related_name="Sibling")

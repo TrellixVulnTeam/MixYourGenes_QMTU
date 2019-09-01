@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from GeneTest.nucleus import *
+#from GeneTest.pedigree import get_child,get_other_parent
 from GeneTest.models import *
 from django.shortcuts import render
 from home.forms import UserForm,UserProfileInfoForm
@@ -9,6 +10,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+
+
+
 
 @login_required
 def index(request):
@@ -104,12 +108,101 @@ def gene_registration(request):
         user=UserProfileInfo.objects.get(user=user)
         if request.method=='POST':
             for i in request.POST:
-                if i!='csrfmiddlewaretoken':
-                    h=have.objects.create(user_id=user, gene_name=gene.objects.get(NCIB_ID=request.POST.get(i)))
-                    h.save()
+                if i!='csrfmiddlewaretoken' and i!='blank':
+                    try:
+                        h=have.objects.create(user_id=user, gene_name=gene.objects.get(NCIB_ID=request.POST.get(i)))
+                        h.save()
+                    except:
+                        pass
             return render(request,'GeneTest/index.html',{})
+
+
+def get_child(object):
+    if object.sex:
+        ch=type(object).objects.filter(dad=object)
+    else:
+        ch=type(object).objects.filter(mom=object)
+    if len(ch)>0:
+        return ch
+    else:
+        return None
+
+def get_other_parent(object):
+    GT=get_child(object)
+    if GT is not None:
+        if object.sex:
+            return GT[0].mom
+        else:
+            return GT[0].dad
+    else:
+        return None
+
+
+
+def FindFirstGeneration(UserObject):
+    if (UserObject.mom is not None) and (UserObject.dad is not None):
+        return FindFirstGeneration(UserObject=UserObject.mom),FindFirstGeneration(UserObject=UserObject.dad)
+    elif (UserObject.mom is None) and (UserObject.dad is not None):
+        return FindFirstGeneration(UserObject=UserObject.dad)
+    elif (UserObject.mom is not None) and (UserObject.dad is None):
+        return FindFirstGeneration(UserObject=UserObject.mom)
+    else:
+        return OrderAllGenerations(0,UserObject,{})
+
+def OrderAllGenerations(index,UserObject,generations):
+    generations[index]=[]
+    child=get_child(UserObject)
+    if child is not None:
+        other_parent=get_other_parent(UserObject)
+        generations[index]=child[0]
+        for i in child:
+            return OrderAllGenerations(index+1,child[0],generations)
+    else:
+        generations[index]=UserObject
+        return generations,index
+
+
+def ResultToContext(tuple):
+    context={}
+    for i in tuple:
+        for j in range(0,len(i),2):
+            print('j:\t',j)
+            #for j in i:
+            #    print(i)
+            #    if j != max(tuple[1]):
+            #        if j not in context.keys():
+            #            context[j]=[[i[0][j].mom,i[0][j].dad]]
+            #        else:
+            #            context[j]=context[j]+[[i[0][j].mom,i[0][j].dad]]
+            #    else:
+            #        print('itt történik valami')
+            #        context[j]=[i[0][j]]
+    result=context
+    return result
+
 @login_required
 def DrawPedigree(request):
+    subfamily={}
     user=User.objects.get(username=request.user.username)
     user=UserProfileInfo.objects.get(user=user)
-    return render(request,'GeneTest/pedigree.html',{})
+    context=FindFirstGeneration(user)
+    families=ResultToContext(context)
+    print(families)
+#    while (user.mom is not  None) or (user.dad is not None):
+#        if user.sex:
+#            user=UserProfileInfo.objects.get(user=user.dad)
+#        else:
+#            user=UserProfileInfo.objects.get(user=user.mom)
+#    index=0
+#    check=True
+#    print("siblings:\t",get_child(user))
+#    while check is not None:
+#        parent=get_other_parent(user)
+#        children=get_child(user)
+#        subfamily[index]=[user,parent,children]
+#        print(subfamily)
+#
+#        user=children[0]
+#        check=get_child(user)
+#        index=index+1
+    return render(request,'GeneTest/pedigree.html',{'families':families})

@@ -8,52 +8,36 @@
 {% load static %}
 <!-- Main component -->
 <section class="basic-style">
-    <h1> Pedigree</h1>
-    <div class="hv-container">
-        <div class="hv-wrapper">
-            <!-- Key component -->
+  <div class="hv-container">
+      <div class="hv-wrapper">
+            {% if families %}
+
+            {% for index, subfamily in families.items %}
+          <div class="hv-item">
+            {% for family in subfamily %}
             <div class="hv-item">
-                <div class="hv-item-parents">
+            <div class="hv-item-parents">
+
+            {% if family.0.sex %}
                   <div class="hv-item-parent hv-item-parent-left">
-                      <p class="simple-card"> Parent </p>
+                      <p class="simple-card-male">{{ subfamily.0.user.username }}</p>
                   </div>
                   <div class="hv-item-parent hv-item-parent-right">
-                      <p class="simple-card"> Parent </p>
+                      <p class="simple-card-female"> {{ subfamily.1.user.username }}</p>
                   </div>
+            {% else%}
+                  <div class="hv-item-parent hv-item-parent-left">
+                    <p class="simple-card-male">{{ subfamily.1.user.username }}</p>
                 </div>
-                <div class="hv-item-children">
-                    <div class="hv-item-child">
-                        <!-- Key component -->
-                        <div class="hv-item">
-                          <div class="hv-item-parents">
-                            <div class="hv-item-parent hv-item-parent-left">
-                                <p class="simple-card"> Parent </p>
-                            </div>
-                            <div class="hv-item-parent hv-item-parent-right hv-item-child">
-                                <p class="simple-card"> Parent </p>
-                            </div>
-                          </div>
-                            <div class="hv-item-children">
-                                <div class="hv-item-child">
-                                    <p class="simple-card"> Child 1 </p>
-                                </div>
-                                <div class="hv-item-child">
-                                    <p class="simple-card"> Child 2 </p>
-                                </div>
-                                <div class="hv-item-child">
-                                    <p class="simple-card"> Child 2 </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hv-item-child">
-                        <p class="simple-card"> Child 2 </p>
-                    </div>
-                    <div class="hv-item-child">
-                        <p class="simple-card"> Child 3 </p>
-                    </div>
+                <div class="hv-item-parent hv-item-parent-right">
+                    <p class="simple-card-female"> {{ subfamily.0.user.username }}</p>
                 </div>
-            </div>
+          </div>
+            {% endif %}
+          </div>
+              {% endfor %}
+              {% endfor %}
+              {% endif %}
         </div>
     </div>
 </section>
