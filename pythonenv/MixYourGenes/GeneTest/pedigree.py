@@ -1,18 +1,16 @@
 
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse,HttpResponseRedirect
-#from .models import *
+
 #from .nucleus import INHERITANCE
-from django.urls import reverse
-import datetime
-from django.utils.timezone import utc
-from django.views.generic.base import TemplateView
-from random import randrange
-from anytree import Node,RenderTree
+
+#S_INHERITANCE={"dominance":{1.0:["A.A","A.a"],0.0:["a.a"]},"intermedier":{2.0:["A.A;A.A"],1.5:["A.A;A.a"],1.0:["A.a;A.a","A.A;a.a"],0.5:["A.a;a.a"],0.0:["a.a;a.a"]}}
 
 
-S_INHERITANCE={"dominance":{1.0:["A.A","A.a"],0.0:["a.a"]},"intermedier":{2.0:["A.A;A.A"],1.5:["A.A;A.a"],1.0:["A.a;A.a","A.A;a.a"],0.5:["A.a;a.a"],0.0:["a.a;a.a"]}}
 
+def DoesMemberHave(list,member):
+    if member in list:
+        return True
+    else:
+        return False
 
 class Child():
     def __init__(self,boy,girl):
@@ -149,11 +147,15 @@ class Parent():
         self.mom=None
         self.child=None
 
-    def add_dad(self,doesHave,ID):
-        self.dad=Parent(doesHave,Gene(self.desease.intheritance,self.desease.name,self.desease.is_X_linked),True,ID)
+    #def add_dad(self,doesHave,ID):
+    def add_dad(self,DAD):
+        #self.dad=Parent(doesHave,Gene(self.desease.intheritance,self.desease.name,self.desease.is_X_linked),True,ID)
+        self.dad=DAD
         self.dad.child=self
-    def add_mom(self,doesHave,ID):
-        self.mom=Parent(doesHave,Gene(self.desease.intheritance,self.desease.name,self.desease.is_X_linked),False,ID)
+    #def add_mom(self,doesHave,ID):
+        #self.mom=Parent(doesHave,Gene(self.desease.intheritance,self.desease.name,self.desease.is_X_linked),False,ID)
+    def add_mom(self,MOM):
+        self.mom=MOM
         self.mom.child=self
 
     def set_genotype(self):

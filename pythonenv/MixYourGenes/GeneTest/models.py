@@ -18,6 +18,7 @@ class gene(models.Model):
     img=models.ImageField(blank=True)
     description=models.TextField()
     trait_name=models.ForeignKey(trait,on_delete=models.CASCADE)
+    IsXLinked=models.BooleanField(default=False)
     def __str__(self):
         return self.name
 

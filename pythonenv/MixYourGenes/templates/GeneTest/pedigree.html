@@ -3,42 +3,133 @@
 {% block styleblock %}
 <link rel="stylesheet" href="{% static "css/tree/hierarchy-view.css" %}">
 <link rel="stylesheet" href="{% static "css/tree/main.css" %}" >
+<script>window.jQuery || document.write('<script src="{% static "js/jquery-1.9.1.min.js" %}"><\/script>')</script>
 {% endblock %}
 {% block body_block %}
 {% load static %}
 <!-- Main component -->
+{% if genes %}
+<p>User</p><input id='UserChoise' type="text" value="">
+<select id='DeseaseChoose' >
+  <option name='default' value='-'>Choose</option>
+  {% for gene in genes %}
+      <option name='gene.NCIB_ID' value="{{ gene.NCIB_ID }}">{{ gene.name }}</option>
+  {% endfor %}
+</select>
+{% endif %}
+{% if UserFamily %}
 <section class="basic-style">
   <div class="hv-container">
       <div class="hv-wrapper">
-            {% if families %}
-
-            {% for index, subfamily in families.items %}
-          <div class="hv-item">
-            {% for family in subfamily %}
             <div class="hv-item">
-            <div class="hv-item-parents">
+              <div class="hv-item-pseudo-parents">
+            {% for index, subfamily in UserFamily.items %}
+              <div class="hv-item-parents">
+              <div class="hv-item-children">
+            {% for member in subfamily %}
 
-            {% if family.0.sex %}
-                  <div class="hv-item-parent hv-item-parent-left">
-                      <p class="simple-card-male">{{ subfamily.0.user.username }}</p>
-                  </div>
-                  <div class="hv-item-parent hv-item-parent-right">
-                      <p class="simple-card-female"> {{ subfamily.1.user.username }}</p>
-                  </div>
+                  {% if index == 10000 %}
+                  {% if member.sex %}
+                          <div class="hv-item-child">
+                              <p id="{{ member.user.username }}" class="simple-card-male">{{ member.user.username }}</p>
+                          </div>
+                  {% else %}
+                          <div class="hv-item-child">
+                              <p id="{{ member.user.username }}" class="simple-card-female">{{ member.user.username }}</p>
+                          </div>
+                  {% endif %}
             {% else%}
+            <div class="hv-item-child">
+            <div class="hv-item-parents">
                   <div class="hv-item-parent hv-item-parent-left">
-                    <p class="simple-card-male">{{ subfamily.1.user.username }}</p>
+                    <p id="{{ member.mom.user.username }}" class="simple-card-female">{{ member.mom.user.username }}</p>
                 </div>
                 <div class="hv-item-parent hv-item-parent-right">
-                    <p class="simple-card-female"> {{ subfamily.0.user.username }}</p>
+                    <p id="{{ member.dad.user.username }}" class="simple-card-male"> {{ member.dad.user.username }}</p>
                 </div>
+          </div>
           </div>
             {% endif %}
           </div>
               {% endfor %}
+            </div>
+
               {% endfor %}
-              {% endif %}
+          </div>
         </div>
+
+    </div>
+    </div>
+{% endif %}
+{% if PartnerFamily %}
+  <div class="hv-container">
+      <div class="hv-wrapper">
+            <div class="hv-item">
+              <div class="hv-item-pseudo-parents">
+            {% for index, subfamily in PartnerFamily.items %}
+              <div class="hv-item-parents">
+              <div class="hv-item-children">
+            {% for member in subfamily %}
+
+                  {% if index == 10000 %}
+                  {% if member.sex %}
+                          <div class="hv-item-child">
+                              <p id="{{ member.user.username }}" class="simple-card-male">{{ member.user.username }}</p>
+                          </div>
+                  {% else %}
+                          <div class="hv-item-child">
+                              <p id="{{ member.user.username }}"class="simple-card-female">{{ member.user.username }}</p>
+                          </div>
+                  {% endif %}
+            {% else%}
+            <div class="hv-item-child">
+            <div class="hv-item-parents">
+                  <div class="hv-item-parent hv-item-parent-left">
+                    <p id="{{ member.mom.user.username }}" class="simple-card-female">{{ member.mom.user.username }}</p>
+                </div>
+                <div class="hv-item-parent hv-item-parent-right">
+                    <p id="{{ member.dad.user.username }}" class="simple-card-male"> {{ member.dad.user.username }}</p>
+                </div>
+          </div>
+          </div>
+            {% endif %}
+          </div>
+              {% endfor %}
+            </div>
+
+              {% endfor %}
+          </div>
+        </div>
+
+    </div>
     </div>
 </section>
+{% endif %}
+<script>
+  var sex={'True':true,'False':false}
+  var DeseaseCarrier={
+    {% if carrier %}{% for member in carrier %}'{{ member.user_id.user.username }}':sex['{{ member.user_id.sex }}'],{% endfor %}{% endif %}
+  }
+
+function ColourCarriers(){
+  for (var i in DeseaseCarrier) {
+    if (DeseaseCarrier[i]){
+      $('#'+i).removeClass('simple-card-male');
+      $('#'+i).addClass('simple-card-male-desease');
+    }else{
+      $('#'+i).removeClass('simple-card-female');
+      $('#'+i).addClass('simple-card-female-desease');
+    }
+  }
+}
+
+      $('#DeseaseChoose').change(function(){
+        var user=$('#UserChoise').val();
+          window.location.href = "/test/family-test/"+$("#DeseaseChoose>option:selected").val()+"/"+user;
+      });
+
+      $(window).load(function(){
+        ColourCarriers();
+      });
+  </script>
 {% endblock %}
