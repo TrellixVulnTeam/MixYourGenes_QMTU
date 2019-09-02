@@ -38,8 +38,8 @@ class Children():
     pass
 
 class Gene():
-    def __init__(self,intheritance,name,is_X_linked):
-        self.intheritance=intheritance
+    def __init__(self,inheritance,name,is_X_linked):
+        self.inheritance=inheritance
         self.name=name
         self.genotype=0
         self.possibility=0
@@ -48,36 +48,36 @@ class Gene():
     def recombination(self,other,self_sex):
         if isinstance(other,Gene):
             if self.is_X_linked:
-                if self.intheritance=="dominance":
+                if self.inheritance=="dominance":
                     return self.dom_x_linked_recombination(other,self_sex)
-                elif self.intheritance=="recessive":
+                elif self.inheritance=="recessive":
                     return self.rec_x_linked_recombination(other,self_sex)
             else:
-                if self.intheritance=="dominance":
+                if self.inheritance=="dominance":
                     return self.dom_recombination(other)
-                elif self.intheritance=="recessive":
+                elif self.inheritance=="recessive":
                     return self.rec_recombination(other)
         elif other:
             if self.is_X_linked:
-                if self.intheritance=="recessive":
+                if self.inheritance=="recessive":
                     return Child({1:0,0:1},{0:1,1:0,0.5:0})
-                elif self.intheritance=="dominance":
+                elif self.inheritance=="dominance":
                     return Child({1:1,0:0},{0.5:(2/3),1:(1/3),0:0})
             else:
-                if self.intheritance=="recessive":
+                if self.inheritance=="recessive":
                     return {1:0,0:1,0.5:0}
-                elif self.intheritance=="dominance":
+                elif self.inheritance=="dominance":
                     return {1:(1/3),0.5:(2/3),0:0}
         else:
             if self.is_X_linked:
-                if self.intheritance=="recessive":
+                if self.inheritance=="recessive":
                     return Child({1:1,0:0},{0.5:(2/3),1:(1/3),1:0})
-                elif self.intheritance=="dominance":
+                elif self.inheritance=="dominance":
                     return Child({0:1,1:0},{0:1,0.5:0,1:0})
             else:
-                if self.intheritance=="recessive":
+                if self.inheritance=="recessive":
                     return {0.5:(2/3),0:0,1:(1/3)}
-                elif self.intheritance=="dominance":
+                elif self.inheritance=="dominance":
                     return {0:1,1:0,0.5:0}
     def dom_recombination(self,other):
         dom=self.genotype+other.genotype
@@ -149,21 +149,21 @@ class Parent():
 
     #def add_dad(self,doesHave,ID):
     def add_dad(self,DAD):
-        #self.dad=Parent(doesHave,Gene(self.desease.intheritance,self.desease.name,self.desease.is_X_linked),True,ID)
+        #self.dad=Parent(doesHave,Gene(self.desease.inheritance,self.desease.name,self.desease.is_X_linked),True,ID)
         self.dad=DAD
         self.dad.child=self
     #def add_mom(self,doesHave,ID):
-        #self.mom=Parent(doesHave,Gene(self.desease.intheritance,self.desease.name,self.desease.is_X_linked),False,ID)
+        #self.mom=Parent(doesHave,Gene(self.desease.inheritance,self.desease.name,self.desease.is_X_linked),False,ID)
     def add_mom(self,MOM):
         self.mom=MOM
         self.mom.child=self
 
     def set_genotype(self):
-        if self.doesHave:
+        if not self.doesHave:
             if self.dad is not None and self.mom is not None:
                 self.dad.set_genotype()
                 self.mom.set_genotype()
-                r=self.desease.genotype=self.dad.desease.recombination(self.mom.desease)
+                r=self.dad.desease.recombination(self.mom.desease,self.sex)
                 if isinstance(r,Child):
                     get_max=r.get_max(self.sex)
                     self.desease.genotype=list(get_max.keys())[0]
@@ -173,7 +173,7 @@ class Parent():
                     self.desease.possibility=list(r.values())[0]
                 return self.desease.genotype
             else:
-                r=self.desease.genotype=self.desease.recombination(doesHave)
+                r=self.desease.recombination(self.doesHave,self.sex)
                 if isinstance(r,Child):
                     get_max=r.get_max(self.sex)
                     self.desease.genotype=list(get_max.keys())[0]
@@ -183,7 +183,7 @@ class Parent():
                     self.desease.possibility=list(r.values())[0]
                 return self.desease.genotype
         else:
-            r=self.desease.genotype=self.desease.recombination(doesHave)
+            r=self.desease.recombination(self.doesHave,self.sex)
             if isinstance(r,Child):
                 get_max=r.get_max(self.sex)
                 self.desease.genotype=list(get_max.keys())[0]

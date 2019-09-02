@@ -195,7 +195,7 @@ def DrawPedigree(request,gene_id=None,username=None):
         desease=gene.objects.get(NCIB_ID=gene_id)
         DeseaseCarrier=have.objects.filter(gene_name=desease)
 
-        GeneOfDesease=pedigree.Gene(intheritance=desease.trait_name.inheritance,name=desease.NCIB_ID,is_X_linked=desease.IsXLinked)
+        GeneOfDesease=pedigree.Gene(inheritance=desease.trait_name.inheritance,name=desease.NCIB_ID,is_X_linked=desease.IsXLinked)
         DoesHaveList=[i.user_id.user.username for i in DeseaseCarrier]
         FamilyMembers={'user1':[],'user2':[]}
         user1=context
@@ -222,9 +222,30 @@ def DrawPedigree(request,gene_id=None,username=None):
                         if u.mom is None:
                             u.add_mom(QueryToParentObject(j.mom,GeneOfDesease,DoesHaveList))
                         if u.dad is None:
-                            u.add_dad(QueryToParentObject(j.mom,GeneOfDesease,DoesHaveList))
+                            u.add_dad(QueryToParentObject(j.dad,GeneOfDesease,DoesHaveList))
                         FamilyMembers[user].append(u)
-        print(FamilyMembers['user1'][3].dad.dad.ID)
-        return render(request,'GeneTest/pedigree.html',{'UserFamily':context, 'PartnerFamily':context2,'genes':genes, 'carrier':DeseaseCarrier})
+        user1=FamilyMembers['user1'].pop()
+        user2=FamilyMembers['user2'].pop()
+        user1.set_genotype()
+        user2.set_genotype()
+        for u in [user1,user2]:
+            print(u.desease.inheritance, '\t' ,u.desease.genotype)
+            if u.desease.inheritance=='recessive':
+                if (u.desease.genotype == 0) and (u.ID not in DeseaseCarrier):
+                    us=User.objects.get(username=u.ID)
+                    g=gene.objects.get(NCIB_ID=u.desease.name)
+                    g.IsGenotypeSet=True
+                    g.save()
+                    have.objects.create(user_id=UserProfileInfo.objects.get(user=user2),gene_name=g)
+                    #change genotypes in the database
+            else:
+                if (u.ID not in DeseaseCarrier) and (u.desease.genotype==1):
+                    us=User.objects.get(username=u.ID)
+                    g=gene.objects.get(NCIB_ID=u.desease.name)
+                    g.IsGenotypeSet=True
+                    g.save()
+                    have.objects.create(user_id=UserProfileInfo.objects.get(user=us),gene_name=g)
+        DeseaseCarrier=have.objects.filter(gene_name=desease)
+        return render(request,'GeneTest/pedigree.html',{'UserFamily':context, 'PartnerFamily':context2,'genes':genes, 'carrier':DeseaseCarrier,'UserGenotypes':[user1,user2]})
     else:
         return render(request,'GeneTest/pedigree.html',{'UserFamily':context, 'genes':genes})

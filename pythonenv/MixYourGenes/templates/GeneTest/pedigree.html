@@ -32,10 +32,12 @@
                   {% if member.sex %}
                           <div class="hv-item-child">
                               <p id="{{ member.user.username }}" class="simple-card-male">{{ member.user.username }}</p>
+                              <p id="{{ member.user.username }}_text" ></p>
                           </div>
                   {% else %}
                           <div class="hv-item-child">
                               <p id="{{ member.user.username }}" class="simple-card-female">{{ member.user.username }}</p>
+                              <p id="{{ member.user.username }}_text" ></p>
                           </div>
                   {% endif %}
             {% else%}
@@ -43,9 +45,11 @@
             <div class="hv-item-parents">
                   <div class="hv-item-parent hv-item-parent-left">
                     <p id="{{ member.mom.user.username }}" class="simple-card-female">{{ member.mom.user.username }}</p>
+                    <p id="{{ member.mom.user.username }}_text"></p>
                 </div>
                 <div class="hv-item-parent hv-item-parent-right">
                     <p id="{{ member.dad.user.username }}" class="simple-card-male"> {{ member.dad.user.username }}</p>
+                    <p id="{{ member.dad.user.username }}_text" ></p>
                 </div>
           </div>
           </div>
@@ -75,10 +79,12 @@
                   {% if member.sex %}
                           <div class="hv-item-child">
                               <p id="{{ member.user.username }}" class="simple-card-male">{{ member.user.username }}</p>
+                              <p id="{{ member.user.username }}_text" ></p>
                           </div>
                   {% else %}
                           <div class="hv-item-child">
                               <p id="{{ member.user.username }}"class="simple-card-female">{{ member.user.username }}</p>
+                              <p id="{{ member.user.username }}_text" ></p>
                           </div>
                   {% endif %}
             {% else%}
@@ -86,9 +92,11 @@
             <div class="hv-item-parents">
                   <div class="hv-item-parent hv-item-parent-left">
                     <p id="{{ member.mom.user.username }}" class="simple-card-female">{{ member.mom.user.username }}</p>
+                    <p id="{{ member.mom.user.username }}_text"></p>
                 </div>
                 <div class="hv-item-parent hv-item-parent-right">
                     <p id="{{ member.dad.user.username }}" class="simple-card-male"> {{ member.dad.user.username }}</p>
+                    <p id="{{ member.dad.user.username }}_text" ></p>
                 </div>
           </div>
           </div>
@@ -110,6 +118,21 @@
   var DeseaseCarrier={
     {% if carrier %}{% for member in carrier %}'{{ member.user_id.user.username }}':sex['{{ member.user_id.sex }}'],{% endfor %}{% endif %}
   }
+
+
+  {% if UserGenotypes %}
+  var GeneDict={
+      {% if UserGenotypes.0.user.desease.inheritance == 'recessive' %}
+                1:'healthy',0.5:'carrier',0:'sick'
+                  {% else %}
+                  1:'sick',0.5:'carrier',0:'healthy'
+                  {% endif%}
+            }
+      {% for user in UserGenotypes %}
+      $('#{{user.ID}}').html('{{user.ID}} <br />'+GeneDict[{{ user.desease.genotype }}]+' with '+(Math.round(({{ user.desease.possibility }}*100)))+'% possibility');
+      {% endfor %}
+  {% endif %}
+
 
 function ColourCarriers(){
   for (var i in DeseaseCarrier) {
