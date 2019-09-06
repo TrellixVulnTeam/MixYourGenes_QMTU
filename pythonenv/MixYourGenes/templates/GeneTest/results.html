@@ -6,12 +6,6 @@
     {% if user.is_authenticated %}
       {% if result %}
       <h1>{{ test.user_id1.user.username }} & {{ test.user_id2.user.username }} <a href="{% url 'GeneTest:delete' test.test_id %}" ><img src="{% static 'img/trash.png' %}" widh="100px" height="100px"></a></h1>
-      <p>{{ result.min_possibility }} </p>
-      <p>{{ result.max_possibility }} </p>
-      <p>USER1:{{ figure.user1_x }} </p>
-      <p>USER2:{{ figure.user2_x }} </p>
-      <p>NEW:{{ figure.new }} </p>
-      <p>COMMON:{{ figure.common }} </p>
       {% endif %}
 
     {% else %}
