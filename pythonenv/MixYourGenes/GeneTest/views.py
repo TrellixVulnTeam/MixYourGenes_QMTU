@@ -187,9 +187,9 @@ def DrawPedigree(request,gene_id=None,username=None):
     if (username is not None) and (gene_id is not None):
         generations={}
         subfamily2={}
-        user2=User.objects.get(username=username)
-        user2=UserProfileInfo.objects.get(user=user2)
-        context2=FindFirstGeneration(user2)
+        User2=User.objects.get(username=username)
+        User2=UserProfileInfo.objects.get(user=User2)
+        context2=FindFirstGeneration(User2)
         while isinstance(context2,dict) is False:
             context2=list(context2).pop()
         desease=gene.objects.get(NCIB_ID=gene_id)

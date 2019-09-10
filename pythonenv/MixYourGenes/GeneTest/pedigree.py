@@ -159,7 +159,7 @@ class Parent():
         self.mom.child=self
 
     def set_genotype(self):
-        if not self.doesHave:
+        if self.doesHave:
             if self.dad is not None and self.mom is not None:
                 self.dad.set_genotype()
                 self.mom.set_genotype()
