@@ -141,6 +141,7 @@ class Parent():
     def __init__(self,doesHave,desease,sex,ID):
         self.sex=sex
         self.ID=ID
+        self.IsGenotypeSet=False
         self.doesHave=doesHave
         self.desease=desease
         self.dad=None
@@ -163,43 +164,59 @@ class Parent():
             if self.dad is not None and self.mom is not None:
                 self.dad.set_genotype()
                 self.mom.set_genotype()
+                print(self.mom.ID.user.username)
+                print(self.dad.ID.user.username)
                 r=self.dad.desease.recombination(self.mom.desease,self.sex)
+                print(r)
                 if isinstance(r,Child):
                     get_max=r.get_max(self.sex)
-                    self.desease.genotype=list(get_max.keys())[0]
-                    self.desease.possibility=list(get_max.values())[0]
+                    self.desease.genotype=list(get_max.keys())
+                    self.desease.possibility=list(get_max.values())
                 else:
-                    self.desease.genotype=list(r.keys())[0]
-                    self.desease.possibility=list(r.values())[0]
+                    max_p=max(r.values())
+                    for genotype in r.keys():
+                        if r[genotype]==max_p:
+                            self.desease.genotype=genotype
+                    self.desease.possibility=max_p
                 return self.desease.genotype
             else:
                 r=self.desease.recombination(self.doesHave,self.sex)
+                print('Nodadnomom\t',r)
                 if isinstance(r,Child):
                     get_max=r.get_max(self.sex)
-                    self.desease.genotype=list(get_max.keys())[0]
-                    self.desease.possibility=list(get_max.values())[0]
+                    self.desease.genotype=list(get_max.keys())
+                    self.desease.possibility=list(get_max.values())
                 else:
-                    self.desease.genotype=list(r.keys())[0]
-                    self.desease.possibility=list(r.values())[0]
+                    max_p=max(r.values())
+                    for genotype in r.keys():
+                        if r[genotype]==max_p:
+                            self.desease.genotype=genotype
+                    self.desease.possibility=max_p
                 return self.desease.genotype
         else:
             r=self.desease.recombination(self.doesHave,self.sex)
             if isinstance(r,Child):
                 get_max=r.get_max(self.sex)
-                self.desease.genotype=list(get_max.keys())[0]
-                self.desease.possibility=list(get_max.values())[0]
+                self.desease.genotype=list(get_max.keys())
+                self.desease.possibility=list(get_max.values())
             else:
-                self.desease.genotype=list(r.keys())[0]
-                self.desease.possibility=list(r.values())[0]
+                max_p=max(r.values())
+                for genotype in r.keys():
+                    if r[genotype]==max_p:
+                        self.desease.genotype=genotype
+                self.desease.possibility=max_p
             return self.desease.genotype
 
     def add_child(self,other):
         cum=self.desease.recombination(other.desease)
         if isinstance(r,Child):
             get_max=r.get_max(self.sex)
-            self.desease.genotype=list(get_max.keys())[0]
-            self.desease.possibility=list(get_max.values())[0]
+            self.desease.genotype=list(get_max.keys())
+            self.desease.possibility=list(get_max.values())
         else:
-            self.desease.genotype=list(r.keys())[0]
-            self.desease.possibility=list(r.values())[0]
+            max_p=max(r.values())
+            for genotype in r.keys():
+                if r[genotype]==max_p:
+                    self.desease.genotype=genotype
+            self.desease.possibility=max_p
         return Children()

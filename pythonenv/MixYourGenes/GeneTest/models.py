@@ -15,7 +15,6 @@ class gene(models.Model):
     NCIB_ID=models.CharField(max_length=300, primary_key=True, default="")
     name = models.CharField(max_length=30)
     genotype = models.FloatField(max_length=1)
-    IsGenotypeSet=models.BooleanField(default=False)
     img=models.ImageField(blank=True)
     description=models.TextField()
     trait_name=models.ForeignKey(trait,on_delete=models.CASCADE)
@@ -26,6 +25,8 @@ class gene(models.Model):
 class have(models.Model):
     user_id = models.ForeignKey(AccountModel.UserProfileInfo, on_delete=models.CASCADE, default="")
     gene_name = models.ForeignKey(gene, on_delete=models.CASCADE)
+    IsGenotypeSet=models.BooleanField(default=False)
+    genotype = models.FloatField(max_length=1, default=0)
 
 class tests(models.Model):
     user_id1=models.ForeignKey(AccountModel.UserProfileInfo,on_delete=models.CASCADE,related_name="User1")
