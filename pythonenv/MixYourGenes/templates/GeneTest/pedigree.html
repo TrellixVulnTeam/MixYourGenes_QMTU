@@ -28,7 +28,18 @@
               <div class="hv-item-children">
             {% for member in subfamily %}
 
-                  {% if index == 10000 %}
+            {% if index == 10000 %}
+                {% if member.user.username == 'BlankDad' %}
+                          <div class="hv-item-child">
+                              <p id="{{ member.user.username }}" class="simple-card-male BlankUser">+</p>
+                              <p id="{{ member.user.username }}_text" ></p>
+                          </div>
+                  {% elif member.username == 'BlankMom' %}
+                          <div class="hv-item-child">
+                              <p id="{{ member.user.username }}" class="simple-card-female BlankUser">+</p>
+                              <p id="{{ member.user.username }}_text" ></p>
+                          </div>
+                  {% else %}
                   {% if member.sex %}
                           <div class="hv-item-child">
                               <p id="{{ member.user.username }}" class="simple-card-male">{{ member.user.username }}</p>
@@ -40,11 +51,13 @@
                               <p id="{{ member.user.username }}_text" ></p>
                           </div>
                   {% endif %}
+                  {% endif %}
             {% else%}
+                {% if member.mom.user.username == 'BlankMom'%}
             <div class="hv-item-child">
             <div class="hv-item-parents">
                   <div class="hv-item-parent hv-item-parent-left">
-                    <p id="{{ member.mom.user.username }}" class="simple-card-female">{{ member.mom.user.username }}</p>
+                    <p id="{{ member.mom.user.username }}" class="simple-card-female BlankUser">+</p>
                     <p id="{{ member.mom.user.username }}_text"></p>
                 </div>
                 <div class="hv-item-parent hv-item-parent-right">
@@ -53,6 +66,33 @@
                 </div>
           </div>
           </div>
+                {% elif member.dad.user.username == 'BlankDad' %}
+                <div class="hv-item-child">
+                <div class="hv-item-parents">
+                      <div class="hv-item-parent hv-item-parent-left">
+                        <p id="{{ member.mom.user.username }}" class="simple-card-female ">{{ member.mom.user.username }}</p>
+                        <p id="{{ member.mom.user.username }}_text"></p>
+                    </div>
+                    <div class="hv-item-parent hv-item-parent-right">
+                        <p id="{{ member.dad.user.username }}" class="simple-card-male BlankUser">+</p>
+                        <p id="{{ member.dad.user.username }}_text" ></p>
+                    </div>
+              </div>
+              </div>
+              {% else %}
+              <div class="hv-item-child">
+              <div class="hv-item-parents">
+                    <div class="hv-item-parent hv-item-parent-left">
+                      <p id="{{ member.mom.user.username }}" class="simple-card-female">{{ member.mom.user.username }}</p>
+                      <p id="{{ member.mom.user.username }}_text"></p>
+                  </div>
+                  <div class="hv-item-parent hv-item-parent-right">
+                      <p id="{{ member.dad.user.username }}" class="simple-card-male"> {{ member.dad.user.username }}</p>
+                      <p id="{{ member.dad.user.username }}_text" ></p>
+                  </div>
+            </div>
+            </div>
+                  {% endif %}
             {% endif %}
           </div>
               {% endfor %}
