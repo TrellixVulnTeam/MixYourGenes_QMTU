@@ -34,8 +34,10 @@ def gene_vector(request):
 
 global INHERITANCE
 #INHERITANCE={"dominant":{2:(11/12),1:0.5,0:1},"intermedier":{2:,1.5:0,1:0,0.5:0,0:1},"kodominant":""}
-INHERITANCE={"dominance":{2.0:["A.A;A.A","A.A;A.a","A.a;A.a"],1.0:["A.A;a.a","A.a;a.a;"],0.0:["a.a;a.a"]},"intermedier":{2.0:["A.A;A.A"],1.5:["A.A;A.a"],1.0:["A.a;A.a","A.A;a.a"],0.5:["A.a;a.a"],0.0:["a.a;a.a"]}}
-            #"kodominant":{2:["A.A;A.A"],1.5:["A.A;A.a"],1:["A.a;A.a","A.A;a.a"],0.5:["A.a;a.a"],0:["a.a;a.a"]}}
+INHERITANCE={"dominance":{2.0:["A.A;A.A","A.A;A.a","A.a;A.a"],1.0:["A.A;a.a","A.a;a.a;"],0.0:["a.a;a.a"]},
+            "intermedier":{2.0:["A.A;A.A"],1.5:["A.A;A.a"],1.0:["A.a;A.a","A.A;a.a"],0.5:["A.a;a.a"],0.0:["a.a;a.a"]},
+            "codominant":{2.0:["A.A;A.A","A.A;A.a","A.a;A.a"],1.0:["A.A;a.a","A.a;a.a;"],0.0:["a.a;a.a"],- 1.0:["B.B;b.b","B.b;b.b;"],- 2.0:["B.B;B.B","B.B;B.b","B.b;B.b"]},
+            }
 
 def deenterizator(string):
     string=list(string)
@@ -49,15 +51,20 @@ class Allele():
         self.min_likelihood=0
         self.is_new=False
         if inheritance=="dominance":
-            self.dom_recombination(INHERITANCE[inheritance][genotype])
+            self.DomRecombination(INHERITANCE[inheritance][genotype],'a')
         elif inheritance=="intermedier":
-            self.int_recombination(INHERITANCE[inheritance][genotype])
-        elif self.which_inhetitance=="kodominant":
-            pass
+            self.IntRecombination(INHERITANCE[inheritance][genotype])
+        elif inheritance=="codominant":
+            if genotype<=0:
+                self.DomRecombination(INHERITANCE[inheritance][genotype],'b')
+            elif genotype>100:
+                self.CoRecombination(genotype)
+            elif genotype>=0:
+                self.DomRecombination(INHERITANCE[inheritance][genotype],'a')
 
-    def dom_recombination(self,allele_list):
-        dom_likelihood=0
-        rec_likelihood=0
+    def DomRecombination(self,allele_list,locus=None):
+        DominantLikelihood=0
+        RecessiveLikelihood=0
         cases=0
         for i in allele_list:
             a=i.split(';')
@@ -66,22 +73,22 @@ class Allele():
             for j in range(2):
                 cases=cases+1
                 if b1[j]>b2[j]:
-                    rec_likelihood=rec_likelihood+1
+                    RecessiveLikelihood=RecessiveLikelihood+1
                 elif b1[j]==b2[j]:
-                    if b1[j]=="a":
-                        rec_likelihood=rec_likelihood+1
+                    if b1[j]==locus:
+                        RecessiveLikelihood=RecessiveLikelihood+1
                     else:
-                        dom_likelihood=dom_likelihood+1
+                        DominantLikelihood=DominantLikelihood+1
                 else:
-                    dom_likelihood=dom_likelihood+1
-        likelihoods=set([(dom_likelihood/cases),(rec_likelihood/cases)])
+                    DominantLikelihood=DominantLikelihood+1
+        likelihoods=set([(DominantLikelihood/cases),(RecessiveLikelihood/cases)])
         self.max_likelihood=round(max(likelihoods),4)
         self.min_likelihood=round(min(likelihoods),4)
 
-    def int_recombination(self,allele_list):
-        dom_likelihood=0
-        rec_likelihood=0
-        int_likelihood=0
+    def IntRecombination(self,allele_list):
+        DominantLikelihood=0
+        RecessiveLikelihood=0
+        IntermedierLikelihood=0
         cases=0
         for i in allele_list:
             a=i.split(';')
@@ -90,24 +97,53 @@ class Allele():
             for j in range(2):
                 cases=cases+1
                 if b1[j]>b2[j]:
-                    int_likelihood=int_likelihood+1
+                    IntermedierLikelihood=IntermedierLikelihood+1
                 elif b1[j]==b2[j]:
                     if b1[j]=="a":
-                        rec_likelihood=rec_likelihood+1
+                        RecessiveLikelihood=RecessiveLikelihood+1
                     else:
-                        dom_likelihood=dom_likelihood+1
+                        DominantLikelihood=DominantLikelihood+1
                 else:
-                    int_likelihood=int_likelihood+1
-        likelihoods=set([(dom_likelihood/cases),(rec_likelihood/cases)],(int_likelihood/cases))
+                    IntermedierLikelihood=IntermedierLikelihood+1
+        likelihoods=set([(DominantLikelihood/cases),(RecessiveLikelihood/cases),(IntermedierLikelihood/cases)])
         self.max_likelihood=round(max(likelihoods),4)
         self.min_likelihood=round(min(likelihoods),4)
-        if self.max_likelihood==int_likelihood or self.min_likelihood==int_likelihood:
+        if self.max_likelihood==IntermedierLikelihood or self.min_likelihood==IntermedierLikelihood:
             self.is_new=True
 
-    def ko_recombination(self,allele_list):
-        pass
+    def CoRecombination(self,genotype):
+        CodominantLikelihood=0
+        Dom1Likelihood=0
+        Dom2Likelihood=0
+        cases=0
+        if genotype==999:
+            CodominantLikelihood=(3/8)
+            Dom1Likelihood=(1/8)
+            Dom2Likelihood=0.5
 
 
+        #elif genotype==999.5:
+        #    pass
+        elif genotype==1000:
+            CodominantLikelihood=0
+            Dom1Likelihood=0.5
+            Dom2Likelihood=0.5
+            self.is_new=True
+        #elif genotype==1000.5:
+        #    pass
+        elif genotpye==1001:
+            CodominantLikelihood=(3/8)
+            Dom2Likelihood=(1/8)
+            Dom1Likelihood=0.5
+        elif genotype==2000:
+            CodominantLikelihood=0.5
+            Dom1Likelihood=0.25
+            Dom2Likelihood=0.25
+        likelihoods=set([Dom1Likelihood,Dom2Likelihood,CodominantLikelihood])
+        self.max_likelihood=round(max(likelihoods),4)
+        self.min_likelihood=round(min(likelihoods),4)
+#        if self.max_likelihood==Dom2Likelihood or self.min_likelihood==Dom2Likelihood:
+#            self.is_new=True
 
 class Gene():
     def __init__(self,trait,name,inheritance,user,genotype):
@@ -121,21 +157,33 @@ class Gene():
         if not ref:
             r=self.dominancy+other.dominancy
             cross_over=Allele(r,other.inheritance)
-            if self.dominancy>other.dominancy:
-                if cross_over.is_new:
-                    return Recombination_result(self.name,self.inheritance,1,[],cross_over.max_likelihood)
+            if abs(self.dominancy)>abs(other.dominancy):
+                if self.dominancy==1000:
+                    if cross_over.is_new:
+                        return Recombination_result(self.name,self.inheritance,1000,[],cross_over.max_likelihood)
+                    else:
+                        return Recombination_result(self.name,self.inheritance,1000,[self.user],cross_over.max_likelihood)
                 else:
-                    return Recombination_result(self.name,self.inheritance,1,[self.user],cross_over.max_likelihood)
+                    if cross_over.is_new:
+                        return Recombination_result(self.name,self.inheritance,1,[],cross_over.max_likelihood)
+                    else:
+                        return Recombination_result(self.name,self.inheritance,1,[self.user],cross_over.max_likelihood)
             elif self.dominancy==other.dominancy:
                 if cross_over.is_new:
                     return Recombination_result(self.name,self.inheritance,r/2,[],cross_over.max_likelihood)
                 else:
                     return Recombination_result(self.name,self.inheritance,r/2,[self.user,other.user],cross_over.max_likelihood)
             else:
-                if cross_over.is_new:
-                    return Recombination_result(other.name,other.inheritance,1,[],cross_over.max_likelihood)
+                if other.dominancy==1000:
+                    if cross_over.is_new:
+                        return Recombination_result(other.name,other.inheritance,1000,[],cross_over.max_likelihood)
+                    else:
+                        return Recombination_result(other.name,other.inheritance,1000,[other.user],cross_over.max_likelihood)
                 else:
-                    return Recombination_result(other.name,other.inheritance,1,[other.user],cross_over.max_likelihood)
+                    if cross_over.is_new:
+                        return Recombination_result(other.name,other.inheritance,1,[],cross_over.max_likelihood)
+                    else:
+                        return Recombination_result(other.name,other.inheritance,1,[other.user],cross_over.max_likelihood)
         else:
             pass
     def min_recombination(self,other,ref):#according to the genotypes, it results the set of traits which have the lowest likelihood to has been resulted
