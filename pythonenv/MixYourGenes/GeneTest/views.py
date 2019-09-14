@@ -143,17 +143,23 @@ def get_other_parent(object):
         return None
 
 def FindFirstGeneration(UserObject):
-    if (UserObject.mom is not None) and (UserObject.dad is not None):
-        return FindFirstGeneration(UserObject=UserObject.mom),FindFirstGeneration(UserObject=UserObject.dad)
-    elif (UserObject.mom is None) and (UserObject.dad is not None):
-        return FindFirstGeneration(UserObject=UserObject.dad)
-    elif (UserObject.mom is not None) and (UserObject.dad is None):
-        return FindFirstGeneration(UserObject=UserObject.mom)
-    else:
+    if UserObject == UserObject.mom or UserObject == UserObject.dad:
         return OrderAllGenerations(0,UserObject)
+    else:
+        if (UserObject.mom is not None) and (UserObject.dad is not None):
+            return FindFirstGeneration(UserObject=UserObject.mom),FindFirstGeneration(UserObject=UserObject.dad)
+        elif (UserObject.mom is None) and (UserObject.dad is not None):
+            UserObject.mom=None
+            return FindFirstGeneration(UserObject=UserObject.mom),FindFirstGeneration(UserObject=UserObject.dad)
+        elif (UserObject.mom is not None) and (UserObject.dad is None):
+            UserObject.dad=None
+            return FindFirstGeneration(UserObject=UserObject.mom),FindFirstGeneration(UserObject=UserObject.dad)
+        else:
+            return OrderAllGenerations(0,UserObject)
 
 def OrderAllGenerations(index,UserObject):
     global generations
+    #if User
     child=get_child(UserObject)
     if child is not None:
         if index in generations.keys():
