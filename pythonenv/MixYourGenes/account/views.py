@@ -34,7 +34,10 @@ def profile(request):
             children=UserProfileInfo.objects.filter(dad=user)
         else:
             children=UserProfileInfo.objects.filter(mom=user)
-
+        if user.mom.user.username=='BlankMom':
+            user.mom=None
+        if user.dad.user.username=="BlankDad":
+            user.dad=None
         if len(siblings)==0 and len(children)==0:
             return render(request,'account/profile.html',{'profile':user,'genes':genes,'test':SelfTest})
         elif len(siblings)>0:
