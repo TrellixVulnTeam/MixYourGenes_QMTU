@@ -7,4 +7,4 @@ class MendelienGeneAdmin(admin.ModelAdmin):
     list_filter=["ensemblID","phenotype","chromosome","reference"]
     list_display=["ensemblID","gene_name","phenotype","chromosome","GeneSymbol","reference"]
     list_editable=["gene_name","phenotype","chromosome","GeneSymbol","reference"]
-admin.site.register(models.MendelienGene)
+admin.site.register(models.MendelienGene,MendelienGeneAdmin)
