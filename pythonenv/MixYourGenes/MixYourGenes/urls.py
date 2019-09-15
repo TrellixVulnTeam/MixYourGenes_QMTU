@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^account/',include('account.urls')),
     url(r'^test/',include('GeneTest.urls')),
     url(r'^logout/$', views.user_logout, name='logout'),
-    url(r'^mendel/$',include('MendelienDatabase.urls')),
+    #url(r'^mendel/$',include('MendelienDatabase.urls')),
 ]
 if settings.DEBUG: # new
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

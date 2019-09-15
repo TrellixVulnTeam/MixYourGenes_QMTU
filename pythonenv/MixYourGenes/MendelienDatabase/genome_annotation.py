@@ -1,5 +1,5 @@
 import requests, sys
-#from MendelienDatabase.models import MendelienGene
+from MendelienDatabase import models
 from pyensembl import EnsemblRelease
 import pickle
 def loader(name):
@@ -10,7 +10,7 @@ def saver(obj,name):
     outfile=open(name,'wb')
     pickle.dump(obj,outfile)
     outfile.close()
-class MendelGene():
+class MendelienGene():
     def __init__(self,ENSMBL=None,chromosome=None,phenotype1=None,phenotype2=None,name=None,comments=None,GeneSymbol=None,prefix=None,phenotype3=None):
         self.ENSMBL=ENSMBL
         self.chromosome=chromosome
@@ -50,24 +50,21 @@ with open("/Users/Kovszasz/Documents/Munka/Projektek/MixYourGenes/pythonenv/MixY
     for gene in mimgene:
         gene=deenterizator(gene).split(';')
         if gene[5] in mim2gene.keys():
-            mim2gene2[gene[5]]=MendelGene(ENSMBL=mim2gene[gene[5]],chromosome=gene[0],phenotype1=gene[12],name=gene[7],comments=gene[11],GeneSymbol=gene[6])
-print(mim2gene2)
-print('2')
+            mim2gene2[gene[5]]=MendelienGene(ENSMBL=mim2gene[gene[5]],chromosome=gene[0],phenotype1=gene[12],name=gene[7],comments=gene[11],GeneSymbol=gene[6])
+
 with open("/Users/Kovszasz/Documents/Munka/Projektek/MixYourGenes/pythonenv/MixYourGenes/static/additional/genemap.txt") as mimgene:
     for gene in mimgene:
         gene=deenterizator(gene).split(';')
         if gene[6] in mim2gene2.keys():
             mim2gene2[gene[6]].phenotype2=gene[10]
-print(mim2gene2)
-print('3')
+
 with open("/Users/Kovszasz/Documents/Munka/Projektek/MixYourGenes/pythonenv/MixYourGenes/static/additional/mimTitles.txt") as mimgene:
     for gene in mimgene:
         gene=deenterizator(gene).split('__:__')
         if gene[1] in mim2gene2.keys():
             mim2gene2[gene[1]].alternative_name=gene[2]
             mim2gene2[gene[1]].prefix=gene[0]
-print(mim2gene2)
-print('4')
+
 def category(string):
     if string.find('(3)')>-1:
         return [string.replace(' (3)',''),'The molecular basis for the disorder is known; a mutation has been found in the gene.']
@@ -87,10 +84,45 @@ with open("/Users/Kovszasz/Documents/Munka/Projektek/MixYourGenes/pythonenv/MixY
             mim2gene2[g[0]].phenotype3=gene[0]
             #mim2gene2[g[0]].GeneSymbol=mim2gene[g[0]].GeneSymbol+";"+gene[1]
             mim2gene2[g[0]].annotation_comment=g[1]
-print(mim2gene2)
-print('5')
 #saver(mim2gene2,'backup')
 #mim2gene2=genome_annotation.loader('backup')
+print(len(mim2gene2.values()))
+counter={}
 for i in mim2gene2.values():
-    m=MendelienGene.objects.create(ensemblID=i.ENSMBL,gene_name=i.name,sequence=get_sequence(i.ENSMBL),type=i.comments,phenotype=i.phenotype3,chromosome=i.chromosome,GeneSymbol=i.GeneSymbol)
-    m.save()
+    if i.ENSMBL is not None:
+        EN=i.ENSMBL
+    else:
+        EN=""
+    if i.name is not None:
+        n=i.name
+    else:
+        n=""
+    if i.comments is not None:
+        com=i.comments
+    else:
+        com=""
+    if i.phenotype3 is not None:
+        ph=i.phenotype3
+    else:
+        ph=""
+    if i.chromosome is not None:
+        ch=i.chromosome
+    else:
+        ch=""
+    if i.GeneSymbol is not None:
+        gs=i.GeneSymbol
+    else:
+        gs=""
+
+    try:
+        seq=get_sequence(EN)
+    except:
+        seq=""
+    print(type(MendelienGene))
+    if len(models.MendelienGene.objects.filter(ensemblID=EN))==0:
+        counter[EN]=0
+        m=models.MendelienGene.objects.create(ensemblID=EN,gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs)
+        m.save()
+    else:
+        counter[EN]=counter[EN]+1
+        m=models.MendelienGene.objects.create(ensemblID=EN+"_"+str(counter[EN]),gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs)
