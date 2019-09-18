@@ -13,12 +13,11 @@
     <script type="text/javascript" src="{% static "js/jquery.svg.js" %}"></script>
     {% if user.is_authenticated %}
       {# if profile.sex #}
-      {% if user.username == 'DAD' %}
+
+      {% if user.userprofileinfo.sex %}
           <link rel="stylesheet" href="{% static "css/MaleAccount.css" %}">
-      {% elif user.username == 'MOM' %}
-          <link rel="stylesheet" href="{% static "css/FemaleAccount.css" %}">
       {% else %}
-          <link rel="stylesheet" href="{% static "css/main.css" %}">
+          <link rel="stylesheet" href="{% static "css/FemaleAccount.css" %}">
       {% endif %}
     {% else %}
     <link rel="stylesheet" href="{% static "css/main.css" %}">
