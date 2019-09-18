@@ -9,5 +9,6 @@ class MendelienGene(models.Model):
     chromosome=models.CharField(max_length=30, default="",null=True,blank=True)
     GeneSymbol=models.CharField(max_length=30, default="",null=True,blank=True)
     reference=models.CharField(max_length=30, default="OMMIM")
+    IsInheritanceKnown=models.BooleanField(default=True)
     def __str__(self):
         return self.ensemblID

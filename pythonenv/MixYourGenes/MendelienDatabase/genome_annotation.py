@@ -1,5 +1,5 @@
 import requests, sys
-from MendelienDatabase import models
+#from MendelienDatabase import models
 from pyensembl import EnsemblRelease
 import pickle
 def loader(name):
@@ -31,13 +31,17 @@ def deenterizator(string):
      string="".join(string)
      return string
 def get_sequence(geneID):
-    server = "http://rest.ensembl.org"
-    ext = "/sequence/id/"+geneID+"?type=genomic"
-    r = requests.get(server+ext, headers={ "Content-Type" : "text/x-fasta"})
-    if not r.ok:
-        r.raise_for_status()
-        sys.exit()
-        print(r.text)
+    try:
+        server = "http://rest.ensembl.org"
+        ext = "/sequence/id/"+geneID+"?type=genomic"
+        r =requests.get(server+ext, headers={ "Content-Type" : "text/x-fasta"})
+        if not r.ok:
+            r.raise_for_status()
+            sys.exit()
+        return t.text
+    except:
+        return ""
+
 mim2gene={}#0,1,4
 with open("/Users/Kovszasz/Documents/Munka/Projektek/MixYourGenes/pythonenv/MixYourGenes/static/additional/mim2gene.txt") as mimgene:
     for gene in mimgene:
@@ -88,7 +92,10 @@ with open("/Users/Kovszasz/Documents/Munka/Projektek/MixYourGenes/pythonenv/MixY
 #mim2gene2=genome_annotation.loader('backup')
 print(len(mim2gene2.values()))
 counter={}
+#file=open("DataBase.txt",'w')
+#file.write('EnsemblID;Name;Sequence;Comments;Phenotype;Chromosome;GeneSymbol;IsInheritanceKnown\n')
 for i in mim2gene2.values():
+    print(type(i))
     if i.ENSMBL is not None:
         EN=i.ENSMBL
     else:
@@ -101,10 +108,10 @@ for i in mim2gene2.values():
         com=i.comments
     else:
         com=""
-    if i.phenotype3 is not None:
-        ph=i.phenotype3
-    else:
-        ph=""
+    ph=""
+    for pht in [i.phenotype1,i.phenotype2,i.phenotype3]:
+        if pht!=None:
+            ph=ph+pht
     if i.chromosome is not None:
         ch=i.chromosome
     else:
@@ -114,15 +121,25 @@ for i in mim2gene2.values():
     else:
         gs=""
 
-    try:
-        seq=get_sequence(EN)
-    except:
-        seq=""
-    print(type(MendelienGene))
-    if len(models.MendelienGene.objects.filter(ensemblID=EN))==0:
-        counter[EN]=0
-        m=models.MendelienGene.objects.create(ensemblID=EN,gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs)
-        m.save()
-    else:
-        counter[EN]=counter[EN]+1
-        m=models.MendelienGene.objects.create(ensemblID=EN+"_"+str(counter[EN]),gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs)
+    if ph!="":
+#        seq="NotRelevant"
+        if ph.find("recessive")>-1 or ph.find("dominant")>-1:
+#            file.write(EN+';'+n+';'+seq+';'+com+';'+ph+';'+ch+';'+gs+';True\n')
+#        else:
+#            file.write(EN+';'+n+';'+seq+';'+com+';'+ph+';'+ch+';'+gs+';False\n')
+#file.close()
+            if len(models.MendelienGene.objects.filter(ensemblID=EN))==0:
+                counter[EN]=0
+                m=models.MendelienGene.objects.create(ensemblID=EN,gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs)
+                m.save()
+            else:
+                counter[EN]=counter[EN]+1
+                m=models.MendelienGene.objects.create(ensemblID=EN+"_"+str(counter[EN]),gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs)
+        else:
+            if len(models.MendelienGene.objects.filter(ensemblID=EN))==0:
+                counter[EN]=0
+                m=models.MendelienGene.objects.create(ensemblID=EN,gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs,IsInheritanceKnown=False)
+                m.save()
+            else:
+                counter[EN]=counter[EN]+1
+                m=models.MendelienGene.objects.create(ensemblID=EN+"_"+str(counter[EN]),gene_name=n,sequence=seq,type=com,phenotype=ph,chromosome=ch,GeneSymbol=gs,IsInheritanceKnown=False)

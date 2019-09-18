@@ -4,7 +4,7 @@ from MendelienDatabase import models
 class MendelienGeneAdmin(admin.ModelAdmin):
     fields=["ensemblID","gene_name","phenotype","chromosome","GeneSymbol","reference"]
     search_fields=["ensemblID","gene_name","phenotype","chromosome","GeneSymbol","reference"]
-    list_filter=["ensemblID","phenotype","chromosome","reference"]
+    list_filter=["IsInheritanceKnown"]
     list_display=["ensemblID","gene_name","phenotype","chromosome","GeneSymbol","reference"]
     list_editable=["gene_name","phenotype","chromosome","GeneSymbol","reference"]
 admin.site.register(models.MendelienGene,MendelienGeneAdmin)
