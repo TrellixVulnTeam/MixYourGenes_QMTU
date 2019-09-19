@@ -3,7 +3,7 @@
 
 <div class="container">
   <div class="jumbotron">
-    <h1>MixYourGenes Account index page</h1>
+    <h1>MixYourGenes home page</h1>
     {% if user.is_authenticated %}
         <h2>Welcome {{ user.username }}!</h2>
     {% else %}
@@ -11,5 +11,4 @@
     {% endif %}
   </div>
 </div>
-
 {% endblock %}
