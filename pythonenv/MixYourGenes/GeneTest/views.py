@@ -18,8 +18,7 @@ generations={}
 @login_required
 def index(request):
     if request.user.is_authenticated:
-        user=User.objects.get(username=request.user.username)
-        user=UserProfileInfo.objects.get(user=user)
+        user=request.user.userprofileinfo
         user_traits=have.objects.filter(user_id=user)
         if len(user_traits)>0:
             results=tests.objects.filter(user_id1=user)
@@ -38,10 +37,8 @@ def index(request):
 def TraitDeseaseTest(request,user1=None,user2=None):
     test_types={'Trait test':'trait','Desease test':'desease','Alltogether':'all'}
     if request.method=='POST':
-        user1=User.objects.get(username=request.user.username)
-        user1=UserProfileInfo.objects.get(user=user1)
-        user2=User.objects.get(username=request.POST.get('User2',False))
-        user2=UserProfileInfo.objects.get(user=user2)
+        user1=request.user.userprofileinfo
+        user2=User.objects.get(username=request.POST.get('User2',False)).userprofileinfo
         test_name=test_types[request.POST.get('test_type',False)]
         context=run(user1,user2,test_name)
         if user1.sex==user2.sex:
@@ -60,14 +57,11 @@ def TraitDeseaseTest(request,user1=None,user2=None):
 @login_required
 def SelfTest(request):
     if request.method=='POST':
-        user=User.objects.get(username=request.user.username)
-        user=UserProfileInfo.objects.get(user=user)
+        user=request.user.userprofileinfo
         mom=request.POST.get('mom')
         dad=request.POST.get('dad')
-        user1=User.objects.get(username=mom)
-        user1=UserProfileInfo.objects.get(user=user1)
-        user2=User.objects.get(username=dad)
-        user2=UserProfileInfo.objects.get(user=user2)
+        user1=User.objects.get(username=mom).userprofileinfo
+        user2=User.objects.get(username=dad).userprofileinfo
         test_name='trait'
         context=run(user1,user2,test_name)
         if user1.sex==user2.sex:
@@ -105,8 +99,7 @@ def delete(request,test_id):
 @login_required
 def gene_registration(request):
     if request.user.is_authenticated:
-        user=User.objects.get(username=request.user.username)
-        user=UserProfileInfo.objects.get(user=user)
+        user=request.user.userprofileinfo
         if request.method=='POST':
             for i in request.POST:
                 if i!='csrfmiddlewaretoken' and i!='blank':
@@ -154,7 +147,6 @@ def FindFirstGeneration(UserObject):
     elif (UserObject.mom is None) and (UserObject.dad is not None):
         #UserObject.mom=pedigree.Parent(doesHave=True,desease=None,sex=False,ID="EMPTY")
         NewMom=User.objects.get(username='BlankMom')
-        print('hejjj')
         UserObject.mom=UserProfileInfo.objects.get(user=NewMom)
         UserObject.save()
         return FindFirstGeneration(UserObject=UserObject.mom),FindFirstGeneration(UserObject=UserObject.dad)
@@ -191,8 +183,7 @@ def DrawPedigree(request,gene_id=None,username=None):
     global generations
     generations={}
     subfamily={}
-    user=User.objects.get(username=request.user.username)
-    user=UserProfileInfo.objects.get(user=user)
+    user=request.user.userprofileinfo
     context=FindFirstGeneration(user)
     while isinstance(context,dict) is False:
         context=list(context).pop()
@@ -203,8 +194,7 @@ def DrawPedigree(request,gene_id=None,username=None):
     if (username is not None) and (gene_id is not None):
         generations={}
         subfamily2={}
-        User2=User.objects.get(username=username)
-        User2=UserProfileInfo.objects.get(user=User2)
+        User2=User.objects.get(username=username).userprofileinfo
         context2=FindFirstGeneration(User2)
         while isinstance(context2,dict) is False:
             context2=list(context2).pop()

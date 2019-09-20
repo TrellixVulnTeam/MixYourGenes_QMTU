@@ -11,16 +11,13 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def index(request):
     if request.user.is_authenticated:
-        user=User.objects.get(username=request.user.username)
-        user=UserProfileInfo.objects.get(user=user)
-        return render(request,'account/index.html',{'profile':user})
-    else:
         return render(request,'account/index.html')
+    else:
+        return render(request,'home/index.html')
 @login_required
 def profile(request):
     if request.user.is_authenticated:
-        user=User.objects.get(username=request.user.username)
-        user=UserProfileInfo.objects.get(user=user)
+        user=request.user.userprofileinfo
         genes=have.objects.filter(user_id=user)
         sibling1=Sibling.objects.filter(sibling1=user)
         sibling2=Sibling.objects.filter(sibling2=user)
@@ -53,8 +50,8 @@ def profile(request):
 
 @login_required
 def AddFamilyMember(request,member):
-    user=User.objects.get(username=request.user.username)
-    user=UserProfileInfo.objects.get(user=user)
+    user=request.user.userprofileinfo
+
 
     if member=='dad':
         dad=User.objects.get(username=request.POST.get('dad'))
