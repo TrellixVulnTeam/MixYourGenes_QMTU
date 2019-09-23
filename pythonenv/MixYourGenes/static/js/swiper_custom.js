@@ -1,7 +1,7 @@
   // swiper js code start
   var galleryTop = new Swiper('.gallery-top', {
     spaceBetween: 0,
-    
+
     navigation: {
       nextEl: '.navigationHide',
       prevEl: '.navigationHide',
@@ -19,6 +19,6 @@
     loop: true,
     loopedSlides: 4
   });
-  galleryTop.controller.control = galleryThumbs;
-  galleryThumbs.controller.control = galleryTop;
+  //galleryTop.controller.control = galleryThumbs;
+  //galleryThumbs.controller.control = galleryTop;
   // swiper js code end
